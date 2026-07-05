@@ -1,0 +1,22 @@
+{
+  "name": "Jotunheimen 2026",
+  "short_name": "Jotunheimen",
+  "description": "Il viaggio del gruppo in Norvegia — programma, checklist, mappa e foto.",
+  "start_url": "/gruppo.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1e4d6b",
+  "theme_color": "#1e4d6b",
+  "lang": "it",
+  "icons": [
+    { "src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Mappa", "url": "/gruppo.html#mappa" },
+    { "name": "Checklist", "url": "/gruppo.html#checklist" },
+    { "name": "To Do", "url": "/gruppo.html#todo" }
+  ]
+}
