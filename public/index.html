@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0c4a6e">
+<title>Jotunheimen 2026 — Traversata</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root{
+  --navy:#0c4a6e; --blue:#1e40af; --sky:#0ea5e9; --sky-light:#e0f2fe;
+  --slate:#334155; --slate-light:#64748b; --red:#dc2626;
+  --bg:#f8fafc; --card:#ffffff; --border:#e2e8f0;
+  --shadow:0 4px 24px rgba(12,74,110,.08); --shadow-lg:0 12px 48px rgba(12,74,110,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--slate);background:var(--bg);overflow-x:hidden}
+h1,h2,h3{font-family:'Outfit',sans-serif;color:var(--navy)}
+
+/* ===== HERO ===== */
+.hero{position:relative;height:100svh;min-height:560px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden}
+.hero-bg{position:absolute;inset:-12% 0;background:url('/assets/hero_fiordo.jpg') center/cover;will-change:transform;z-index:0}
+.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(248,250,252,.15) 0%,rgba(248,250,252,0) 40%,rgba(248,250,252,.92) 92%,var(--bg) 100%);z-index:1}
+.hero>*{position:relative;z-index:2}
+.hero .kicker{font-family:'Outfit';font-weight:600;letter-spacing:.45em;text-transform:uppercase;font-size:clamp(11px,2.6vw,15px);color:var(--sky);margin-bottom:14px}
+.hero h1{font-size:clamp(44px,10vw,104px);font-weight:800;line-height:.95;letter-spacing:-.02em}
+.hero .sub{margin-top:16px;font-size:clamp(14px,3vw,19px);color:var(--slate);font-weight:500}
+.hero .dates{margin-top:8px;font-family:'Outfit';font-weight:700;color:var(--blue);font-size:clamp(15px,3.4vw,22px)}
+.norway-band{display:inline-flex;height:5px;width:120px;margin-top:22px;border-radius:3px;overflow:hidden}
+.norway-band i{flex:1}.norway-band i:nth-child(1){background:var(--red)}.norway-band i:nth-child(2){background:#fff}.norway-band i:nth-child(3){background:var(--blue)}
+
+/* countdown */
+.countdown{display:flex;gap:clamp(8px,2.4vw,20px);margin-top:36px}
+.cd-box{background:rgba(255,255,255,.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.9);border-radius:18px;padding:clamp(10px,2.6vw,20px) clamp(12px,3vw,26px);box-shadow:var(--shadow);min-width:clamp(64px,17vw,110px)}
+.cd-num{font-family:'Outfit';font-weight:800;font-size:clamp(26px,7vw,52px);color:var(--navy);line-height:1;font-variant-numeric:tabular-nums}
+.cd-lbl{font-size:clamp(9px,2vw,12px);text-transform:uppercase;letter-spacing:.12em;color:var(--slate-light);margin-top:6px}
+.cd-live{margin-top:36px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);border-radius:999px;padding:10px 22px;box-shadow:var(--shadow);font-weight:600;color:var(--navy)}
+.pulse{width:11px;height:11px;border-radius:50%;background:var(--red);position:relative}
+.pulse::after{content:'';position:absolute;inset:-5px;border-radius:50%;background:var(--red);opacity:.4;animation:pulse 1.6s ease-out infinite}
+@keyframes pulse{0%{transform:scale(.6);opacity:.5}100%{transform:scale(1.8);opacity:0}}
+.scroll-hint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);color:var(--slate-light);font-size:12px;letter-spacing:.15em;text-transform:uppercase;animation:bob 2.2s ease-in-out infinite;z-index:2}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+/* ===== SECTIONS ===== */
+section{padding:clamp(56px,9vw,110px) clamp(18px,5vw,64px);position:relative}
+.section-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.5;z-index:0}
+section>.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.sec-kicker{font-family:'Outfit';font-weight:600;letter-spacing:.3em;text-transform:uppercase;font-size:12px;color:var(--sky);margin-bottom:8px}
+h2{font-size:clamp(28px,5.4vw,44px);font-weight:800;letter-spacing:-.01em;margin-bottom:14px}
+.sec-desc{color:var(--slate-light);max-width:620px;font-size:15.5px;line-height:1.65;margin-bottom:34px}
+
+/* progress */
+.progress-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:26px 28px;box-shadow:var(--shadow);margin-bottom:26px}
+.progress-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.progress-title{font-family:'Outfit';font-weight:700;color:var(--navy);font-size:18px}
+.progress-meta{font-size:13px;color:var(--slate-light)}
+.pbar{height:14px;background:var(--sky-light);border-radius:999px;overflow:hidden;position:relative}
+.pbar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--sky),var(--blue));width:0%;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.pbar-milestones{display:flex;justify-content:space-between;margin-top:8px;font-size:10.5px;color:var(--slate-light);text-transform:uppercase;letter-spacing:.04em}
+
+#map{height:clamp(380px,58vh,600px);border-radius:22px;box-shadow:var(--shadow-lg);border:1px solid var(--border);z-index:1}
+.map-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:16px;font-size:12.5px;color:var(--slate-light)}
+.map-legend span{display:inline-flex;align-items:center;gap:6px}
+.lg-dot{width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--border)}
+
+/* gallery */
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.ph{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:1;cursor:pointer;box-shadow:var(--shadow);background:var(--sky-light);opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s}
+.ph.vis{opacity:1;transform:none}
+.ph img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.ph:hover img{transform:scale(1.06)}
+.ph .cap{position:absolute;inset:auto 0 0 0;padding:26px 12px 10px;background:linear-gradient(transparent,rgba(12,74,110,.82));color:#fff;font-size:12px;opacity:0;transition:opacity .3s}
+.ph:hover .cap{opacity:1}
+.empty-state{background:var(--card);border:1.5px dashed var(--border);border-radius:20px;padding:46px 24px;text-align:center;color:var(--slate-light)}
+.empty-state .big{font-size:38px;margin-bottom:10px}
+
+/* lightbox */
+.lightbox{position:fixed;inset:0;background:rgba(12,30,45,.92);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;flex-direction:column}
+.lightbox.open{display:flex}
+.lightbox img{max-width:94vw;max-height:78vh;border-radius:14px;box-shadow:0 20px 80px rgba(0,0,0,.5)}
+.lb-cap{color:#e0f2fe;margin-top:16px;text-align:center;font-size:14px;max-width:600px}
+.lb-close{position:absolute;top:18px;right:22px;color:#fff;font-size:34px;cursor:pointer;line-height:1;opacity:.8}
+
+/* team */
+.team{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.chip{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:999px;padding:8px 18px 8px 8px;box-shadow:var(--shadow);opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s}
+.chip.vis{opacity:1;transform:none}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Outfit';font-weight:700;color:#fff;font-size:14px}
+.chip b{font-family:'Outfit';color:var(--navy)}
+.chip small{color:var(--slate-light);font-size:11.5px}
+
+/* footer / CTA */
+footer{padding:60px 20px 46px;text-align:center;background:linear-gradient(180deg,var(--bg),var(--sky-light))}
+.cta{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-family:'Outfit';font-weight:700;font-size:16px;padding:16px 34px;border-radius:999px;text-decoration:none;box-shadow:var(--shadow-lg);transition:transform .25s,box-shadow .25s}
+.cta:hover{transform:translateY(-3px);box-shadow:0 18px 56px rgba(12,74,110,.25)}
+footer .note{margin-top:22px;font-size:12px;color:var(--slate-light)}
+
+.fade{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+.fade.vis{opacity:1;transform:none}
+
+.leaflet-popup-content-wrapper{border-radius:14px;font-family:'Inter'}
+.leaflet-popup-content{margin:12px 14px}
+.pop-photo img{width:200px;max-width:58vw;border-radius:10px;display:block}
+.pop-photo .a{font-size:11px;color:var(--slate-light);margin-top:6px}
+.hut-ico{background:var(--navy);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.camp-ico{background:#10b981;color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.peak-ico{background:var(--red);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.photo-ico{background:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;border:2.5px solid var(--sky);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.live-ico{width:18px;height:18px;border-radius:50%;background:var(--red);border:3px solid #fff;box-shadow:0 0 0 2px var(--red),0 2px 10px rgba(0,0,0,.3);animation:livepulse 1.8s ease-out infinite}
+@keyframes livepulse{0%{box-shadow:0 0 0 2px var(--red),0 0 0 0 rgba(220,38,38,.45)}100%{box-shadow:0 0 0 2px var(--red),0 0 0 16px rgba(220,38,38,0)}}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="kicker">Norvegia · Parco Nazionale</div>
+  <h1>JOTUNHEIMEN<br>2026</h1>
+  <div class="sub">La traversata — Gjendesheim · Besseggen · Leirvassbu</div>
+  <div class="dates">8 → 16 agosto 2026 · 9 camminatori · 68 km</div>
+  <span class="norway-band"><i></i><i></i><i></i></span>
+  <div class="countdown" id="countdown">
+    <div class="cd-box"><div class="cd-num" id="cdD">–</div><div class="cd-lbl">giorni</div></div>
+    <div class="cd-box"><div class="cd-num" id="cdH">–</div><div class="cd-lbl">ore</div></div>
+    <div class="cd-box"><div class="cd-num" id="cdM">–</div><div class="cd-lbl">minuti</div></div>
+    <div class="cd-box"><div class="cd-num" id="cdS">–</div><div class="cd-lbl">secondi</div></div>
+  </div>
+  <div class="cd-live" id="liveBadge" style="display:none"><span class="pulse"></span><span id="liveText">In cammino</span></div>
+  <div class="scroll-hint">Scorri ↓</div>
+</div>
+
+<!-- ============ MAPPA LIVE ============ -->
+<section id="mappa">
+  <div class="section-bg" style="background-image:url('/assets/bg_panorama.jpg')"></div>
+  <div class="wrap">
+    <div class="sec-kicker fade">Il percorso</div>
+    <h2 class="fade">Dove siamo, in tempo reale</h2>
+    <p class="sec-desc fade">La traversata attraversa il cuore del Jotunheimen: 68 km dal lago Gjende fino a Leirvassbu passando per il crinale di Besseggen. Durante il cammino pubblicheremo qui la nostra posizione e le foto dai punti più belli — quando la rete lo permette: lassù la copertura va e viene.</p>
+    <div class="progress-card fade" id="progressCard" style="display:none">
+      <div class="progress-top">
+        <div class="progress-title" id="progTitle">In cammino</div>
+        <div class="progress-meta" id="progMeta"></div>
+      </div>
+      <div class="pbar"><div class="pbar-fill" id="progFill"></div></div>
+      <div class="pbar-milestones"><span>Gjendesheim</span><span>Memurubu</span><span>Leirvassbu</span><span>Gjendebu</span></div>
+    </div>
+    <div id="map" class="fade"></div>
+    <div class="map-legend fade">
+      <span><span class="lg-dot" style="background:#0c4a6e"></span> Rifugi DNT</span>
+      <span><span class="lg-dot" style="background:#10b981"></span> Bivacchi in tenda</span>
+      <span><span class="lg-dot" style="background:#dc2626"></span> Besseggen</span>
+      <span><span class="lg-dot" style="background:#fff;border-color:#0ea5e9"></span> 📷 Foto</span>
+      <span><span class="lg-dot live-ico" style="width:12px;height:12px;animation:none"></span> Ultima posizione</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALLERIA ============ -->
+<section id="foto">
+  <div class="section-bg" style="background-image:url('/assets/bg_aurora.jpg')"></div>
+  <div class="wrap">
+    <div class="sec-kicker fade">Diario visivo</div>
+    <h2 class="fade">Le foto dal cammino</h2>
+    <p class="sec-desc fade">Ogni foto è agganciata al punto esatto del percorso in cui è stata scattata. Le trovi anche sulla mappa qui sopra.</p>
+    <div id="gallery" class="gallery"></div>
+    <div id="galleryEmpty" class="empty-state fade">
+      <div class="big">📷</div>
+      <b>Ancora nessuna foto.</b><br>Le prime arriveranno dall'8 agosto — torna a trovarci!
+    </div>
+  </div>
+</section>
+
+<!-- ============ IL GRUPPO ============ -->
+<section id="gruppo" style="padding-top:20px">
+  <div class="wrap" style="text-align:center">
+    <div class="sec-kicker fade">La spedizione</div>
+    <h2 class="fade">I nove</h2>
+    <div class="team" id="team" style="margin-top:26px"></div>
+  </div>
+</section>
+
+<footer>
+  <a class="cta" href="/gruppo.html">Sei uno dei nove? Entra nell'area gruppo →</a>
+  <div class="note">Jotunheimen 2026 · sito del gruppo · cartografia OpenTopoMap</div>
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <span class="lb-close" onclick="closeLb()">×</span>
+  <img id="lbImg" src="" alt="">
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+
+<script>
+// ====== CONFIG ======
+const DEPARTURE = new Date('2026-08-08T21:00:00+02:00'); // orario volo — modificabile
+const ARRIVAL_HOME = new Date('2026-08-16T23:59:00+02:00');
+const TEAM = [
+  ['Gigi','Luigi Boldrin'],['Salva','Enrico Salvalaggio'],['Dalca','Mattia Dal Castello'],
+  ['Matte','Matteo Marcellin'],['Seba','Sebastiano Francescato'],['Semma','Emma Scabbia'],
+  ['Dade','Davide Girotto'],['Zayn','Luca Zanatta'],['Bianc','Luca Bianchin']
+];
+const AVCOLORS = ['#0ea5e9','#8b5cf6','#f59e0b','#dc2626','#10b981','#ec4899','#6366f1','#14b8a6','#f97316'];
+
+// ====== PARALLAX HERO ======
+const heroBg = document.getElementById('heroBg');
+let ticking = false;
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    requestAnimationFrame(() => {
+      heroBg.style.transform = `translateY(${window.scrollY * 0.28}px)`;
+      ticking = false;
+    });
+    ticking = true;
+  }
+}, {passive:true});
+
+// ====== FADE-IN ======
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); }), {threshold:.12});
+document.querySelectorAll('.fade').forEach(el => io.observe(el));
+
+// ====== COUNTDOWN ======
+function pad(n){return String(n).padStart(2,'0')}
+function tickCd(){
+  const now = new Date();
+  const diff = DEPARTURE - now;
+  const cd = document.getElementById('countdown');
+  const live = document.getElementById('liveBadge');
+  if (diff > 0) {
+    document.getElementById('cdD').textContent = Math.floor(diff/86400000);
+    document.getElementById('cdH').textContent = pad(Math.floor(diff/3600000)%24);
+    document.getElementById('cdM').textContent = pad(Math.floor(diff/60000)%60);
+    document.getElementById('cdS').textContent = pad(Math.floor(diff/1000)%60);
+  } else if (now < ARRIVAL_HOME) {
+    cd.style.display = 'none'; live.style.display = 'flex';
+    document.getElementById('liveText').textContent = 'Siamo in Norvegia — segui il percorso qui sotto';
+  } else {
+    cd.style.display = 'none'; live.style.display = 'flex';
+    document.querySelector('.pulse').style.background = '#10b981';
+    document.getElementById('liveText').textContent = 'Traversata completata · 68 km';
+  }
+}
+setInterval(tickCd, 1000); tickCd();
+
+// ====== TEAM CHIPS ======
+const teamEl = document.getElementById('team');
+TEAM.forEach(([nick,name],i) => {
+  const d = document.createElement('div');
+  d.className = 'chip';
+  d.style.transitionDelay = (i*60)+'ms';
+  d.innerHTML = `<span class="avatar" style="background:${AVCOLORS[i]}">${nick[0]}</span><span><b>${nick}</b><br><small>${name}</small></span>`;
+  teamEl.appendChild(d);
+  io.observe(d);
+});
+
+// ====== MAPPA ======
+let map, trackData, photosLayer, liveLayer;
+async function initMap(){
+  const r = await fetch('/assets/track.json');
+  trackData = await r.json();
+  map = L.map('map', {scrollWheelZoom:false});
+  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    attribution:'© OpenTopoMap, OpenStreetMap', maxZoom:16
+  }).addTo(map);
+  map.on('click', () => map.scrollWheelZoom.enable());
+
+  // traccia per tappe colorate
+  trackData.stages.forEach(st => {
+    const seg = trackData.points.filter(p => p[3] >= st.from && p[3] <= st.to).map(p => [p[0], p[1]]);
+    L.polyline(seg, {color:'#fff', weight:7, opacity:.9}).addTo(map);
+    L.polyline(seg, {color:st.color, weight:4, opacity:.95}).addTo(map)
+      .bindTooltip(`${st.label} (${st.date})`, {sticky:true});
+  });
+
+  // waypoint
+  trackData.waypoints.forEach(w => {
+    const cls = w.type === 'hut' ? 'hut-ico' : w.type === 'peak' ? 'peak-ico' : 'camp-ico';
+    const emoji = w.type === 'hut' ? '⌂' : w.type === 'peak' ? '▲' : '⛺';
+    const ico = L.divIcon({className:'', html:`<div class="${cls}">${emoji}</div>`, iconSize:[26,26], iconAnchor:[13,13]});
+    L.marker([w.lat, w.lon], {icon:ico}).addTo(map)
+      .bindPopup(`<b style="font-family:Outfit;color:#0c4a6e">${w.name}</b><br><span style="font-size:12px">${w.desc}</span>${w.night?`<br><span style="font-size:11px;color:#0ea5e9;font-weight:600">Notte del ${w.night}</span>`:''}`);
+  });
+
+  const bounds = L.latLngBounds(trackData.points.map(p => [p[0], p[1]]));
+  map.fitBounds(bounds, {padding:[36,36]});
+
+  photosLayer = L.layerGroup().addTo(map);
+  liveLayer = L.layerGroup().addTo(map);
+  loadPublic();
+  setInterval(loadPublic, 60000);
+}
+
+// distanza haversine minima da un punto ai punti traccia → km progressivo
+function nearestKm(lat, lng){
+  let best = Infinity, km = 0;
+  for (const p of trackData.points) {
+    const d = (p[0]-lat)*(p[0]-lat) + (p[1]-lng)*(p[1]-lng);
+    if (d < best) { best = d; km = p[3]; }
+  }
+  return km;
+}
+
+async function loadPublic(){
+  try {
+    const r = await fetch('/api/data?type=public');
+    if (!r.ok) return;
+    const d = await r.json();
+    renderPhotos(d.photos || []);
+    renderLive(d.checkins || [], d.photos || []);
+  } catch(e) { /* API non ancora configurata: la pagina resta comunque fruibile */ }
+}
+
+function renderPhotos(photos){
+  photosLayer.clearLayers();
+  const g = document.getElementById('gallery');
+  const empty = document.getElementById('galleryEmpty');
+  g.innerHTML = '';
+  empty.style.display = photos.length ? 'none' : 'block';
+  photos.slice().reverse().forEach((p,i) => {
+    // mappa
+    const ico = L.divIcon({className:'', html:'<div class="photo-ico">📷</div>', iconSize:[26,26], iconAnchor:[13,13]});
+    L.marker([p.lat, p.lng], {icon:ico}).addTo(photosLayer)
+      .bindPopup(`<div class="pop-photo"><img src="${p.file}" loading="lazy"><div class="a">${esc(p.caption||'')}<br>— ${esc(p.nick)}, ${fmtDate(p.ts)}</div></div>`);
+    // galleria
+    const d = document.createElement('div');
+    d.className = 'ph';
+    d.style.transitionDelay = (i%8*70)+'ms';
+    d.innerHTML = `<img src="${p.file}" loading="lazy" alt=""><div class="cap">${esc(p.caption||'')} — ${esc(p.nick)}</div>`;
+    d.onclick = () => openLb(p);
+    g.appendChild(d);
+    io.observe(d);
+  });
+}
+
+function renderLive(checkins, photos){
+  liveLayer.clearLayers();
+  const pts = [...checkins.map(c=>({lat:c.lat,lng:c.lng,ts:c.ts,note:c.note,nick:c.nick})),
+               ...photos.map(p=>({lat:p.lat,lng:p.lng,ts:p.ts,note:p.caption,nick:p.nick}))]
+              .sort((a,b)=>a.ts-b.ts);
+  if (!pts.length) return;
+  // percorso fatto
+  if (pts.length > 1) {
+    L.polyline(pts.map(p=>[p.lat,p.lng]), {color:'#dc2626', weight:3, dashArray:'6 7', opacity:.85}).addTo(liveLayer);
+  }
+  const last = pts[pts.length-1];
+  const ico = L.divIcon({className:'', html:'<div class="live-ico"></div>', iconSize:[18,18], iconAnchor:[9,9]});
+  L.marker([last.lat,last.lng],{icon:ico,zIndexOffset:900}).addTo(liveLayer)
+    .bindPopup(`<b style="font-family:Outfit;color:#dc2626">Ultima posizione</b><br><span style="font-size:12px">${esc(last.note||'')} ${last.note?'<br>':''}${fmtDate(last.ts)}</span>`);
+  // barra avanzamento
+  const km = nearestKm(last.lat, last.lng);
+  const pc = Math.min(100, Math.round(km/trackData.total_km*100));
+  const card = document.getElementById('progressCard');
+  card.style.display = 'block';
+  document.getElementById('progFill').style.width = pc+'%';
+  document.getElementById('progTitle').textContent = `Km ${km.toFixed(1)} di ${trackData.total_km}`;
+  document.getElementById('progMeta').textContent = `ultimo aggiornamento: ${fmtDate(last.ts)}`;
+}
+
+// ====== LIGHTBOX ======
+function openLb(p){
+  document.getElementById('lbImg').src = p.file;
+  document.getElementById('lbCap').textContent = `${p.caption||''} — ${p.nick}, ${fmtDate(p.ts)}`;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLb(){ document.getElementById('lightbox').classList.remove('open'); }
+document.getElementById('lightbox').addEventListener('click', e => { if(e.target.id==='lightbox') closeLb(); });
+
+// ====== UTILS ======
+function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+function fmtDate(ts){return new Date(ts).toLocaleString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}
+
+initMap();
+</script>
+</body>
+</html>
