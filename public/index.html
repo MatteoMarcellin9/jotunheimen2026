@@ -61,6 +61,7 @@ h2{font-size:clamp(28px,5.4vw,44px);font-weight:800;letter-spacing:-.01em;margin
 .pbar{height:14px;background:var(--sky-light);border-radius:999px;overflow:hidden;position:relative}
 .pbar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--sky),var(--blue));width:0%;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
 .pbar-milestones{display:flex;justify-content:space-between;margin-top:8px;font-size:10.5px;color:var(--slate-light);text-transform:uppercase;letter-spacing:.04em}
+.map-tiles-light{filter:saturate(.75) brightness(1.05)}
 
 #map{height:clamp(380px,58vh,600px);border-radius:22px;box-shadow:var(--shadow-lg);border:1px solid var(--border);z-index:1}
 .map-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:16px;font-size:12.5px;color:var(--slate-light)}
@@ -122,7 +123,7 @@ footer .note{margin-top:22px;font-size:12px;color:var(--slate-light)}
   <div class="kicker">Norvegia · Parco Nazionale</div>
   <h1>JOTUNHEIMEN<br>2026</h1>
   <div class="sub">La traversata — Gjendesheim · Besseggen · Leirvassbu</div>
-  <div class="dates">8 → 16 agosto 2026 · 9 camminatori · 68 km</div>
+  <div class="dates">8 → 16 agosto 2026 · 9 camminatori · 41 km</div>
   <span class="norway-band"><i></i><i></i><i></i></span>
   <div class="countdown" id="countdown">
     <div class="cd-box"><div class="cd-num" id="cdD">–</div><div class="cd-lbl">giorni</div></div>
@@ -140,14 +141,14 @@ footer .note{margin-top:22px;font-size:12px;color:var(--slate-light)}
   <div class="wrap">
     <div class="sec-kicker fade">Il percorso</div>
     <h2 class="fade">Dove siamo, in tempo reale</h2>
-    <p class="sec-desc fade">La traversata attraversa il cuore del Jotunheimen: 68 km dal lago Gjende fino a Leirvassbu passando per il crinale di Besseggen. Durante il cammino pubblicheremo qui la nostra posizione e le foto dai punti più belli — quando la rete lo permette: lassù la copertura va e viene.</p>
+    <p class="sec-desc fade">La traversata attraversa il cuore del Jotunheimen: 41 km dal lago Gjende fino a Leirvassbu passando per il crinale di Besseggen. Durante il cammino pubblicheremo qui la nostra posizione e le foto dai punti più belli — quando la rete lo permette: lassù la copertura va e viene.</p>
     <div class="progress-card fade" id="progressCard" style="display:none">
       <div class="progress-top">
         <div class="progress-title" id="progTitle">In cammino</div>
         <div class="progress-meta" id="progMeta"></div>
       </div>
       <div class="pbar"><div class="pbar-fill" id="progFill"></div></div>
-      <div class="pbar-milestones"><span>Gjendesheim</span><span>Memurubu</span><span>Leirvassbu</span><span>Gjendebu</span></div>
+      <div class="pbar-milestones"><span>Gjendesheim</span><span>Memurubu</span><span>Altopiano</span><span>Leirvassbu</span></div>
     </div>
     <div id="map" class="fade"></div>
     <div class="map-legend fade">
@@ -241,7 +242,7 @@ function tickCd(){
   } else {
     cd.style.display = 'none'; live.style.display = 'flex';
     document.querySelector('.pulse').style.background = '#10b981';
-    document.getElementById('liveText').textContent = 'Traversata completata · 68 km';
+    document.getElementById('liveText').textContent = 'Cammino completato · 41 km';
   }
 }
 setInterval(tickCd, 1000); tickCd();
@@ -264,7 +265,7 @@ async function initMap(){
   trackData = await r.json();
   map = L.map('map', {scrollWheelZoom:false});
   L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    attribution:'© OpenTopoMap, OpenStreetMap', maxZoom:16
+    attribution:'© OpenTopoMap, OpenStreetMap', maxZoom:16, className:'map-tiles-light'
   }).addTo(map);
   map.on('click', () => map.scrollWheelZoom.enable());
 
