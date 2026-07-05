@@ -1,0 +1,95 @@
+{
+ "slots": [
+  {
+   "id": "d09_spesa",
+   "date": "9 ago",
+   "label": "Spesa a Oslo \u2014 cibo e bombolette gas",
+   "type": "spesa",
+   "posts": []
+  },
+  {
+   "id": "d09_cena",
+   "date": "9 ago",
+   "label": "Cena al rifugio Gjendesheim",
+   "type": "rifugio",
+   "posts": []
+  },
+  {
+   "id": "d10_pranzo",
+   "date": "10 ago",
+   "label": "Pranzo al sacco (preparato dal rifugio)",
+   "type": "sacco",
+   "posts": []
+  },
+  {
+   "id": "d10_cena",
+   "date": "10 ago",
+   "label": "Cena a fornelletto \u2014 Memurubu",
+   "type": "fornelletto",
+   "posts": []
+  },
+  {
+   "id": "d11_colazione",
+   "date": "11 ago",
+   "label": "Colazione a fornelletto",
+   "type": "fornelletto",
+   "posts": []
+  },
+  {
+   "id": "d11_pranzo",
+   "date": "11 ago",
+   "label": "Pranzo al sacco in cammino",
+   "type": "sacco",
+   "posts": []
+  },
+  {
+   "id": "d11_cena",
+   "date": "11 ago",
+   "label": "Cena a fornelletto \u2014 bivacco altopiano",
+   "type": "fornelletto",
+   "posts": []
+  },
+  {
+   "id": "d12_colazione",
+   "date": "12 ago",
+   "label": "Colazione a fornelletto",
+   "type": "fornelletto",
+   "posts": []
+  },
+  {
+   "id": "d12_pranzo",
+   "date": "12 ago",
+   "label": "Pranzo al sacco in cammino",
+   "type": "sacco",
+   "posts": []
+  },
+  {
+   "id": "d12_cena",
+   "date": "12 ago",
+   "label": "Cena a Leirvassbu (rifugio o fornelletto)",
+   "type": "fornelletto",
+   "posts": []
+  },
+  {
+   "id": "d13_colazione",
+   "date": "13 ago",
+   "label": "Colazione a Leirvassbu",
+   "type": "fornelletto",
+   "posts": []
+  },
+  {
+   "id": "d13_pranzo",
+   "date": "13 ago",
+   "label": "Pranzo al sacco \u2014 escursione",
+   "type": "sacco",
+   "posts": []
+  },
+  {
+   "id": "d13_cena",
+   "date": "13 ago",
+   "label": "Cena prima del bus notturno",
+   "type": "fornelletto",
+   "posts": []
+  }
+ ]
+}
