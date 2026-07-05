@@ -128,6 +128,39 @@ export default async function handler(req, res) {
       }
     }
 
+    if (action === 'resetChoices') {
+      const id = verifyToken(body.token);
+      if (!id) return res.status(401).json({ error: 'Sessione scaduta.' });
+      const { target } = body;
+      // verifica admin dal file membri
+      const mem = await ghGet(MEMBERS_PATH);
+      const caller = mem.content.members.find(x => x.id === id);
+      if (!caller || !caller.admin) return res.status(403).json({ error: 'Solo gli admin possono resettare le scelte.' });
+      const t = mem.content.members.find(x => x.id === target);
+      if (!t) return res.status(404).json({ error: 'Membro target non trovato.' });
+      // cancella le scelte del target da choices.json (con retry su conflitto SHA)
+      const CHOICES_PATH = 'data/choices.json';
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${CHOICES_PATH}?ref=main`, { headers: GH_HEADERS() });
+        if (!r.ok) throw new Error(`GH GET choices: ${r.status}`);
+        const d = await r.json();
+        const choices = JSON.parse(Buffer.from(d.content.replace(/\n/g, ''), 'base64').toString('utf-8'));
+        if (!choices[target]) return res.status(200).json({ ok: true, nick: t.nick, alreadyEmpty: true });
+        delete choices[target];
+        const body2 = {
+          message: `Reset scelte di ${t.nick}`,
+          content: Buffer.from(JSON.stringify(choices, null, 1), 'utf-8').toString('base64'),
+          sha: d.sha, branch: 'main'
+        };
+        const pr = await fetch(`https://api.github.com/repos/${REPO}/contents/${CHOICES_PATH}`, {
+          method: 'PUT', headers: { ...GH_HEADERS(), 'Content-Type': 'application/json' }, body: JSON.stringify(body2)
+        });
+        if (pr.ok) return res.status(200).json({ ok: true, nick: t.nick });
+        if (attempt === 2) { const tx = await pr.text(); throw new Error(`GH PUT choices: ${pr.status} ${tx.slice(0,150)}`); }
+        await new Promise(r => setTimeout(r, 300 + attempt * 400));
+      }
+    }
+
     return res.status(400).json({ error: 'Azione non valida.' });
   } catch (e) {
     return res.status(500).json({ error: String(e.message || e).slice(0, 300) });
