@@ -3,7 +3,7 @@
   {
    "id": "gigi",
    "nick": "Gigi",
-   "name": "Luigi Boldrin",
+   "name": "Luigi",
    "admin": false,
    "salt": "e316e30735907539",
    "hash": "d747d659a1bb5e9a8be98f17e61f0ff9668a81634a0488adae468f487222cd4d"
@@ -11,7 +11,7 @@
   {
    "id": "salva",
    "nick": "Salva",
-   "name": "Enrico Salvalaggio",
+   "name": "Enrico",
    "admin": false,
    "salt": "8681dac8059e803e",
    "hash": "f7844eae899af42294e05c25a1110ec0d4324d4a4b4e6cf958d5412168aef450"
@@ -19,7 +19,7 @@
   {
    "id": "dalca",
    "nick": "Dalca",
-   "name": "Mattia Dal Castello",
+   "name": "Mattia",
    "admin": false,
    "salt": "fa0deddec53c6bb3",
    "hash": "ccd9a9ad2d15bfb0533343b33088aa284294c47bf91ac9261bcf5b8a8da2cc18"
@@ -27,7 +27,7 @@
   {
    "id": "matteo",
    "nick": "Matte",
-   "name": "Matteo Marcellin",
+   "name": "Matteo",
    "admin": true,
    "salt": "3a4a746526789fd6",
    "hash": "ca5001694d7fecc3b48c3cbef61429ad800ba5d4c36adb2cb55a1c5c6260c6fa"
@@ -35,7 +35,7 @@
   {
    "id": "seba",
    "nick": "Seba",
-   "name": "Sebastiano Francescato",
+   "name": "Sebastiano",
    "admin": false,
    "salt": "ef0c0bb1045b0f09",
    "hash": "1685a23aa32e31ad90bf936dbc40aaab475e34a39d3b76ea98de762feb4d5b69"
@@ -43,7 +43,7 @@
   {
    "id": "semma",
    "nick": "Semma",
-   "name": "Emma Scabbia",
+   "name": "Emma",
    "admin": false,
    "salt": "28a3f50c76a7e7ac",
    "hash": "ca428caaefa7ff70d65f817d364f8f5fb033b48600f5dc17627c7919f35188da"
@@ -51,7 +51,7 @@
   {
    "id": "dade",
    "nick": "Dade",
-   "name": "Davide Girotto",
+   "name": "Davide",
    "admin": false,
    "salt": "f8b82795c233a6bc",
    "hash": "411d7a12d88983a57c14884ccb36594bf0fde92cb85cd28cbab8f625267d065a"
@@ -59,7 +59,7 @@
   {
    "id": "zayn",
    "nick": "Zayn",
-   "name": "Luca Zanatta",
+   "name": "Luca",
    "admin": false,
    "salt": "a19b46ccd7cec496",
    "hash": "cc0aab8314165838b41a5f16343adba0313834da2f6fd8b03ad54f0101933a66"
@@ -67,7 +67,7 @@
   {
    "id": "bianc",
    "nick": "Bianc",
-   "name": "Luca Bianchin",
+   "name": "Luca",
    "admin": false,
    "salt": "f8f31009d9025352",
    "hash": "c0ebac9821cab930d11ac92d8c71a0d443b1ad54e3672e8534b609f4551ffd49"
