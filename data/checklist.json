@@ -53,6 +53,7 @@
  "dade": {
   "zainodatrekking": true,
   "torciafrontalepile": true,
-  "giaccaimpermeabileguscio": true
+  "giaccaimpermeabileguscio": true,
+  "giaccaavento": true
  }
 }
