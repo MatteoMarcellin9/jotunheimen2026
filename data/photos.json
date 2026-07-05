@@ -1,1 +1,12 @@
-[]
+[
+ {
+  "id": "mr7k3o7t",
+  "member": "matteo",
+  "nick": "Matte",
+  "lat": 61.46221680720333,
+  "lng": 8.869812015909703,
+  "caption": "Test caricamento foto",
+  "file": "/photos/1783241760089_matteo.jpg",
+  "ts": 1783241760089
+ }
+]
