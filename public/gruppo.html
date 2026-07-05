@@ -378,7 +378,7 @@ const PAGE_BG={programma:'/assets/bg_fiordo.jpg',scelte:'/assets/bg_panorama.jpg
 // PROGRAMMA giorno per giorno
 const DAYS=[
   {n:1,date:'VEN 8 AGO',title:'Volo per Oslo',sub:'Partenza e arrivo in Norvegia',body:'Volo in serata. Atterraggio a Oslo Gardermoen attorno a mezzanotte, nella notte tra l\'8 e il 9. Pernottamento in hotel vicino all\'aeroporto per ripartire riposati la mattina.',stats:['✈ Arrivo ~24:00','🏨 Hotel aeroporto'],night:'Hotel a Oslo (aeroporto)'},
-  {n:2,date:'DOM 9 AGO',title:'Spesa e trasferimento a Gjendesheim',sub:'In cammino verso il Jotunheimen',body:'Al mattino: spesa del cibo fresco e delle bombolette per il gas (le bombolette NON si possono portare in aereo, si comprano qui). Bus per Gjendesheim: partenza 08:30, arrivo 13:30. Arrivo al rifugio nel pomeriggio, cena, sauna e notte a Gjendesheim.',stats:['🚌 Bus 08:30→13:30','🛒 Spesa + gas','🧖 Sauna','🛏 Rifugio DNT'],night:'Rifugio Gjendesheim'},
+  {n:2,date:'DOM 9 AGO',title:'Spesa e trasferimento a Gjendesheim',sub:'In cammino verso il Jotunheimen',body:'Al mattino: trasferimento in città e spesa del cibo fresco e delle bombolette per il gas (le bombolette NON si possono portare in aereo, si comprano qui). Bus per Gjendesheim nel primo pomeriggio, con arrivo verso le 16-18. Cena, sauna e notte al rifugio Gjendesheim.',stats:['🚌 Bus → arrivo 16-18','🛒 Spesa + gas','🧖 Sauna','🛏 Rifugio DNT'],night:'Rifugio Gjendesheim'},
   {n:3,date:'LUN 10 AGO',title:'Gjendesheim → Memurubu',sub:'via Besseggen · la tappa regina',body:'Colazione presto e pranzo al sacco preparato dal rifugio. Traversata del crinale di Besseggen (fino a 1732 m), il tratto più spettacolare. Discesa a Memurubu, sul lago Gjende. Notte in tenda, con servizi DNT a pagamento per bagno e docce.',stats:['📏 13,5 km','⛰ +1054 / −1016 m','🏔 max 1732 m','⛺ Tenda'],night:'Tenda a Memurubu'},
   {n:4,date:'MAR 11 AGO',title:'Memurubu → Altopiano',sub:'nel cuore del parco',body:'Colazione a fornelletto in tenda. Si risale verso l\'altopiano centrale, quota ondulata 1200-1500 m senza difficoltà tecniche. Pranzo al sacco lungo il cammino. Si arriva al punto a metà strada verso Leirvassbu e si monta il campo. Nulla da prenotare, bivacco libero.',stats:['📏 15,2 km','⛰ +776 / −542 m','⛺ Tenda libera'],night:'Tenda in quota (~1276 m)'},
   {n:5,date:'MER 12 AGO',title:'Altopiano → Leirvassbu',sub:'arrivo al base camp',body:'Colazione a fornelletto e smontaggio tende. Tappa breve e in salita dolce fino a Leirvassbu (1402 m), ai piedi del Galdhøpiggen. Qui si passa la notte: da decidere insieme se in rifugio o in tenda. Cena al rifugio o a fornelletto secondo la scelta.',stats:['📏 12,8 km','⛰ +279 / −153 m','🏕 Base camp'],night:'Leirvassbu (rifugio o tenda)'},
@@ -434,13 +434,15 @@ let TRACK=null;
 const TODO=[
   {cat:'Prenotazioni alloggi',ic:'🏨',items:[
     'Hotel notte 8 ago vicino aeroporto Oslo (gruppo 9)',
+    'Gjendesheim — prenotare pernottamento notte del 9 ago',
     'Ostello / B&B a Oslo per notti 14 e 15 ago',
     'Leirvassbu — chiamare per notte del 12 (rifugio o posti tenda)'
   ]},
   {cat:'Trasporti',ic:'🚌',items:[
-    'Bus Oslo → Gjendesheim del 9 ago (corsa 08:30) su entur.no',
+    'Trasferimento aeroporto Oslo → centro città (treno Flytoget / Vy o bus FLY)',
+    'Bus Oslo → Gjendesheim del 9 ago (Valdresekspressen NW161, partenza ~12:00 per arrivo 16-18) su entur.no',
     'Bus da Leirvassbu delle 20:00 del 13 ago',
-    'Verificare orari estivi 2026 (corse stagionali) ~60 gg prima',
+    'Verificare orari estivi 2026 (corse stagionali, pubblicate ~60 gg prima)',
     'Check-in online voli andata e ritorno'
   ]},
   {cat:'Attività',ic:'🎟',items:[
