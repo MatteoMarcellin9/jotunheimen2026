@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0c4a6e">
+<title>Area Gruppo — Jotunheimen 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --navy:#0c4a6e; --blue:#1e40af; --sky:#0ea5e9; --sky-light:#e0f2fe;
+  --slate:#334155; --slate-light:#64748b; --red:#dc2626; --green:#10b981; --amber:#f59e0b;
+  --bg:#f8fafc; --card:#fff; --border:#e2e8f0;
+  --shadow:0 4px 24px rgba(12,74,110,.08); --shadow-lg:0 12px 48px rgba(12,74,110,.16);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--slate);background:var(--bg);overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Outfit',sans-serif;color:var(--navy)}
+button{font-family:inherit;cursor:pointer;border:none}
+input,textarea,select{font-family:inherit;font-size:15px}
+.hidden{display:none!important}
+
+/* ===== TOAST ===== */
+#toast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:12px 22px;border-radius:14px;font-size:14px;font-weight:500;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:.35s;z-index:3000;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.err{background:var(--red)}
+
+/* ===== LOGIN ===== */
+#viewLogin{min-height:100svh;display:flex;align-items:center;justify-content:center;padding:24px;position:relative}
+#viewLogin::before{content:'';position:fixed;inset:0;background:url('/assets/hero_tenda.jpg') center/cover;z-index:-1}
+.login-card{background:rgba(255,255,255,.82);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.9);border-radius:26px;box-shadow:var(--shadow-lg);padding:34px 30px;max-width:520px;width:100%}
+.login-card .kick{font-family:'Outfit';font-weight:600;letter-spacing:.35em;text-transform:uppercase;font-size:11px;color:var(--sky);text-align:center}
+.login-card h1{font-size:30px;font-weight:800;text-align:center;margin:8px 0 4px}
+.login-card .sub{text-align:center;color:var(--slate-light);font-size:13.5px;margin-bottom:24px}
+.member-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mcard{background:#fff;border:2px solid var(--border);border-radius:16px;padding:14px 6px;text-align:center;transition:.2s}
+.mcard:hover{border-color:var(--sky);transform:translateY(-2px)}
+.mcard.sel{border-color:var(--navy);background:var(--sky-light)}
+.mcard .avatar{width:44px;height:44px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-family:'Outfit';font-weight:700;color:#fff;font-size:17px}
+.mcard b{font-family:'Outfit';color:var(--navy);font-size:14px;display:block}
+.mcard small{color:var(--slate-light);font-size:10px}
+.code-row{margin-top:22px}
+.code-row label{font-size:12px;font-weight:600;color:var(--slate-light);text-transform:uppercase;letter-spacing:.06em}
+.code-input{width:100%;margin-top:8px;padding:14px 16px;border:2px solid var(--border);border-radius:14px;font-family:'Outfit';font-weight:700;font-size:20px;letter-spacing:.18em;text-align:center;text-transform:uppercase;color:var(--navy);outline:none;transition:.2s}
+.code-input:focus{border-color:var(--sky)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-family:'Outfit';font-weight:700;font-size:16px;padding:15px 30px;border-radius:999px;box-shadow:var(--shadow);transition:.25s;width:100%}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.btn:disabled{opacity:.45;transform:none;cursor:not-allowed}
+.btn.sm{width:auto;padding:9px 18px;font-size:13.5px}
+.btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--border);box-shadow:none}
+.btn.danger{background:linear-gradient(135deg,#dc2626,#b91c1c)}
+.login-err{color:var(--red);font-size:13px;text-align:center;margin-top:12px;min-height:18px;font-weight:500}
+
+/* ===== ONBOARDING SLIDES ===== */
+#viewOnboard{position:fixed;inset:0;overflow:hidden;background:#dbeafe;z-index:100}
+.ob-bg{position:absolute;inset:0;width:130vw;height:100%;background-size:cover;background-position:center;transition:transform 1s cubic-bezier(.2,.8,.2,1),opacity .8s;will-change:transform}
+.ob-track{position:absolute;inset:0;display:flex;transition:transform .65s cubic-bezier(.25,.8,.25,1);will-change:transform}
+.ob-slide{width:100vw;height:100%;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:22px 20px 120px}
+.ob-card{background:rgba(255,255,255,.86);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.95);border-radius:26px;box-shadow:var(--shadow-lg);padding:30px 28px;max-width:560px;width:100%;max-height:calc(100svh - 170px);overflow-y:auto}
+.ob-date{font-family:'Outfit';font-weight:800;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--sky)}
+.ob-card h2{font-size:clamp(24px,5.6vw,34px);font-weight:800;margin:6px 0 12px;line-height:1.08}
+.ob-card p{font-size:14.5px;line-height:1.62;color:var(--slate)}
+.badges{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.badge{background:var(--sky-light);color:var(--navy);font-size:11.5px;font-weight:600;padding:5px 12px;border-radius:999px}
+.badge.warn{background:#fef3c7;color:#b45309}
+.opt-grid{display:flex;flex-direction:column;gap:9px;margin-top:18px}
+.opt{background:#fff;border:2px solid var(--border);border-radius:15px;padding:13px 16px;text-align:left;font-size:14px;font-weight:500;color:var(--slate);transition:.18s;display:flex;align-items:center;gap:11px}
+.opt:hover{border-color:var(--sky)}
+.opt.sel{border-color:var(--navy);background:var(--sky-light);color:var(--navy);font-weight:600}
+.opt .ck{width:21px;height:21px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;transition:.18s}
+.opt.sel .ck{background:var(--navy);border-color:var(--navy)}
+.ob-nav{position:absolute;bottom:0;left:0;right:0;padding:18px 22px 26px;display:flex;align-items:center;justify-content:space-between;gap:14px;background:linear-gradient(transparent,rgba(248,250,252,.9))}
+.ob-dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;flex:1}
+.ob-dot{width:8px;height:8px;border-radius:50%;background:rgba(12,74,110,.22);transition:.3s}
+.ob-dot.on{background:var(--navy);transform:scale(1.35)}
+.ob-dot.done{background:var(--sky)}
+.ob-hint{font-size:11.5px;color:var(--red);font-weight:600;text-align:center;position:absolute;bottom:96px;left:0;right:0;opacity:0;transition:.3s}
+.ob-hint.show{opacity:1}
+
+/* ===== APP SHELL ===== */
+#viewApp{min-height:100svh;padding-bottom:84px}
+.topbar{position:sticky;top:0;z-index:500;background:rgba(255,255,255,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:12px clamp(16px,4vw,40px);display:flex;align-items:center;justify-content:space-between}
+.topbar .brand{font-family:'Outfit';font-weight:800;color:var(--navy);font-size:17px;display:flex;align-items:center;gap:9px}
+.topbar .brand .nb{display:inline-flex;height:4px;width:34px;border-radius:2px;overflow:hidden}
+.topbar .brand .nb i{flex:1}.topbar .brand .nb i:nth-child(1){background:var(--red)}.topbar .brand .nb i:nth-child(2){background:#fff;box-shadow:inset 0 0 0 1px #ddd}.topbar .brand .nb i:nth-child(3){background:var(--blue)}
+.topbar .user{display:flex;align-items:center;gap:10px;font-size:13px}
+.topbar .avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Outfit';font-weight:700;color:#fff;font-size:13px}
+.logout{background:none;color:var(--slate-light);font-size:12px;text-decoration:underline}
+.tabs{position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 4px calc(10px + env(safe-area-inset-bottom))}
+.tab{background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--slate-light);padding:5px 10px;border-radius:12px;transition:.2s;min-width:56px}
+.tab .ic{font-size:20px;line-height:1}
+.tab.on{color:var(--navy);background:var(--sky-light)}
+@media(min-width:880px){
+  #viewApp{padding-bottom:30px}
+  .tabs{position:sticky;top:57px;bottom:auto;border-top:none;border-bottom:1px solid var(--border);justify-content:center;gap:8px;padding:8px}
+  .tab{flex-direction:row;font-size:13px;padding:8px 18px}
+}
+.page{max-width:1080px;margin:0 auto;padding:clamp(18px,4vw,36px) clamp(14px,4vw,32px);position:relative}
+.page-bg{position:fixed;inset:0;background-size:cover;background-position:center;opacity:.42;z-index:-1;transition:opacity .5s}
+.page h2.pt{font-size:clamp(24px,5vw,34px);font-weight:800;margin-bottom:4px}
+.page .pd{color:var(--slate-light);font-size:14px;margin-bottom:24px}
+
+/* ===== PROGRAMMA ===== */
+.day-card{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden;display:flex;flex-direction:column}
+.day-head{display:flex;align-items:center;gap:14px;padding:16px 20px;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff}
+.day-num{font-family:'Outfit';font-weight:800;font-size:24px;background:rgba(255,255,255,.16);border-radius:12px;padding:6px 13px;line-height:1}
+.day-num small{display:block;font-size:9px;font-weight:600;letter-spacing:.1em;opacity:.85}
+.day-head h3{color:#fff;font-size:17px;line-height:1.2}
+.day-head .sub{font-size:11.5px;color:#bae6fd;margin-top:2px}
+.day-body{padding:16px 20px;font-size:14px;line-height:1.6}
+.day-body .stat{display:inline-flex;gap:4px;background:var(--sky-light);color:var(--navy);font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:999px;margin:0 5px 6px 0}
+.elev-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:18px;margin-bottom:22px}
+.elev-wrap img{width:100%;border-radius:10px}
+
+/* ===== SCELTE ===== */
+.choice-block{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:20px 22px;margin-bottom:18px}
+.choice-block h3{font-size:17px;margin-bottom:3px}
+.choice-block .cd{font-size:12.5px;color:var(--slate-light);margin-bottom:14px}
+.copt{border:2px solid var(--border);border-radius:14px;padding:11px 14px;margin-bottom:9px;transition:.2s}
+.copt.mine{border-color:var(--navy);background:var(--sky-light)}
+.copt-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.copt-top b{font-size:13.5px;color:var(--navy)}
+.copt-count{font-family:'Outfit';font-weight:800;color:var(--sky);font-size:15px;white-space:nowrap}
+.copt-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.mini-chip{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--border);border-radius:999px;padding:2px 9px 2px 3px;font-size:11px;font-weight:600;color:var(--slate)}
+.mini-chip .avatar{width:18px;height:18px;font-size:9px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit';font-weight:700}
+.copt .pick{margin-top:9px;background:none;color:var(--sky);font-weight:600;font-size:12.5px;text-decoration:underline}
+.missing-note{font-size:12px;color:var(--amber);font-weight:600;margin-top:6px}
+
+/* ===== CHECKLIST ===== */
+.ck-progress{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:20px 22px;margin-bottom:18px}
+.ck-progress .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.ck-progress b{font-family:'Outfit';font-size:24px;color:var(--navy)}
+.pbar{height:12px;background:var(--sky-light);border-radius:999px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--sky),var(--green));width:0%;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.others{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.other-p{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--slate-light);background:#fff;border:1px solid var(--border);border-radius:999px;padding:3px 10px 3px 4px}
+.other-p .avatar{width:20px;height:20px;font-size:9px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit';font-weight:700}
+.cat{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
+.cat-head{display:flex;justify-content:space-between;align-items:center;padding:15px 18px;cursor:pointer;user-select:none}
+.cat-head h3{font-size:15px;display:flex;align-items:center;gap:9px}
+.cat-head .cnt{font-size:12px;font-weight:700;color:var(--sky)}
+.cat-head .arr{transition:.3s;color:var(--slate-light)}
+.cat.open .arr{transform:rotate(180deg)}
+.cat-items{display:none;padding:2px 12px 12px}
+.cat.open .cat-items{display:block}
+.ck-item{display:flex;align-items:center;gap:12px;padding:9px 8px;border-radius:11px;transition:.15s;cursor:pointer}
+.ck-item:hover{background:var(--bg)}
+.ck-item.done .lbl{text-decoration:line-through;color:var(--slate-light)}
+.ck-item .box{width:22px;height:22px;border-radius:7px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;transition:.18s}
+.ck-item.done .box{background:var(--green);border-color:var(--green)}
+.ck-item .lbl{font-size:13.5px;flex:1}
+.ck-item.warn{background:#fffbeb;border:1px solid #fde68a}
+.ck-item.warn .lbl b{color:#b45309}
+.zaino-guide{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:1px solid #bae6fd;border-radius:18px;padding:18px 20px;margin-top:18px;font-size:13px;line-height:1.7}
+.zaino-guide h3{margin-bottom:8px;font-size:15px}
+
+/* ===== PASTI ===== */
+.meal-date{font-family:'Outfit';font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--sky);margin:22px 0 10px}
+.slot{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
+.slot-head{display:flex;align-items:center;gap:10px;padding:13px 17px;border-bottom:1px solid var(--border)}
+.slot-type{font-size:18px}
+.slot-head b{font-size:14px;color:var(--navy);flex:1}
+.slot-head .n{font-size:11px;color:var(--slate-light)}
+.posts{padding:8px 15px}
+.post{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border)}
+.post:last-child{border-bottom:none}
+.post .avatar{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit';font-weight:700;font-size:12px}
+.post .body{flex:1}
+.post .who{font-size:11.5px;font-weight:700;color:var(--navy)}
+.post .when{font-size:10px;color:var(--slate-light);font-weight:400;margin-left:6px}
+.post .txt{font-size:13.5px;margin-top:2px;white-space:pre-wrap}
+.post .del{background:none;color:var(--slate-light);font-size:15px;padding:0 4px;opacity:.5}
+.post .del:hover{color:var(--red);opacity:1}
+.add-post{display:flex;gap:8px;padding:11px 15px;background:var(--bg);border-top:1px solid var(--border)}
+.add-post input{flex:1;border:1.5px solid var(--border);border-radius:11px;padding:9px 13px;outline:none;font-size:13.5px}
+.add-post input:focus{border-color:var(--sky)}
+.add-post button{background:var(--navy);color:#fff;border-radius:11px;padding:0 16px;font-weight:700;font-size:13px}
+.no-posts{font-size:12.5px;color:var(--slate-light);font-style:italic;padding:6px 0}
+
+/* ===== MAPPA ===== */
+#gmap{height:clamp(340px,52vh,560px);border-radius:20px;box-shadow:var(--shadow-lg);border:1px solid var(--border);z-index:1}
+.map-fabs{display:flex;gap:9px;margin-top:13px;flex-wrap:wrap}
+.fab{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:2px solid var(--border);border-radius:999px;padding:10px 17px;font-weight:700;font-size:13px;color:var(--navy);box-shadow:var(--shadow);transition:.2s}
+.fab:hover{border-color:var(--sky);transform:translateY(-2px)}
+.fab.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.chart-wrap{position:relative;height:170px;background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:12px;margin-top:14px}
+.map-note{font-size:11.5px;color:var(--slate-light);margin-top:10px}
+
+/* ===== MODAL ===== */
+.modal{position:fixed;inset:0;background:rgba(12,30,45,.55);backdrop-filter:blur(4px);z-index:2000;display:none;align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+@media(min-width:640px){.modal.open{align-items:center}}
+.modal-card{background:#fff;border-radius:24px 24px 0 0;padding:24px 22px calc(24px + env(safe-area-inset-bottom));width:100%;max-width:480px;max-height:88svh;overflow-y:auto}
+@media(min-width:640px){.modal-card{border-radius:24px}}
+.modal-card h3{font-size:19px;margin-bottom:14px}
+.modal-card label{font-size:12px;font-weight:600;color:var(--slate-light);text-transform:uppercase;letter-spacing:.05em;display:block;margin:13px 0 6px}
+.modal-card input[type=text],.modal-card textarea{width:100%;border:2px solid var(--border);border-radius:13px;padding:11px 14px;outline:none}
+.modal-card input:focus,.modal-card textarea:focus{border-color:var(--sky)}
+.modal-card textarea{min-height:74px;resize:vertical}
+.pos-toggle{display:flex;gap:8px}
+.pos-toggle button{flex:1;border:2px solid var(--border);background:#fff;border-radius:13px;padding:11px;font-weight:600;font-size:13px;color:var(--slate);transition:.2s}
+.pos-toggle button.on{border-color:var(--navy);background:var(--sky-light);color:var(--navy)}
+.file-drop{border:2px dashed var(--border);border-radius:15px;padding:22px;text-align:center;color:var(--slate-light);font-size:13px;cursor:pointer;transition:.2s;margin-top:6px}
+.file-drop:hover{border-color:var(--sky)}
+.file-drop img{max-width:100%;max-height:170px;border-radius:10px}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-actions .btn{flex:1}
+
+/* ===== ADMIN ===== */
+.admin-row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:15px;padding:12px 15px;margin-bottom:9px;box-shadow:var(--shadow)}
+.admin-row .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit';font-weight:700}
+.admin-row .info{flex:1}
+.admin-row b{font-family:'Outfit';color:var(--navy);font-size:14px}
+.admin-row small{display:block;color:var(--slate-light);font-size:11px}
+.new-code{background:#f0fdf4;border:2px solid #bbf7d0;border-radius:15px;padding:15px;margin:12px 0;text-align:center}
+.new-code .code{font-family:'Outfit';font-weight:800;font-size:26px;letter-spacing:.14em;color:#15803d}
+.new-code small{display:block;color:var(--slate-light);font-size:11.5px;margin-top:5px}
+
+/* leaflet custom */
+.leaflet-popup-content-wrapper{border-radius:14px;font-family:'Inter'}
+.hut-ico{background:var(--navy);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.camp-ico{background:var(--green);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.peak-ico{background:var(--red);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.photo-ico{background:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;border:2.5px solid var(--sky);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.cmt-ico{background:var(--amber);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.hover-dot{width:14px;height:14px;border-radius:50%;background:var(--red);border:3px solid #fff;box-shadow:0 1px 6px rgba(0,0,0,.35)}
+.pop-photo img{width:200px;max-width:58vw;border-radius:10px;display:block}
+.pop-photo .a{font-size:11px;color:var(--slate-light);margin-top:6px}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- ============ LOGIN ============ -->
+<div id="viewLogin">
+  <div class="login-card">
+    <div class="kick">Jotunheimen 2026</div>
+    <h1>Area Gruppo</h1>
+    <div class="sub">Scegli chi sei e inserisci il tuo codice personale</div>
+    <div class="member-grid" id="memberGrid"></div>
+    <div class="code-row">
+      <label>Codice personale</label>
+      <input class="code-input" id="codeInput" placeholder="XXXX-XXXX" maxlength="9" autocomplete="off">
+    </div>
+    <div class="login-err" id="loginErr"></div>
+    <button class="btn" id="btnLogin" disabled>Entra</button>
+  </div>
+</div>
+
+<!-- ============ ONBOARDING ============ -->
+<div id="viewOnboard" class="hidden">
+  <div class="ob-bg" id="obBg1"></div>
+  <div class="ob-bg" id="obBg2" style="opacity:0"></div>
+  <div class="ob-track" id="obTrack"></div>
+  <div class="ob-hint" id="obHint">Scegli un'opzione per continuare</div>
+  <div class="ob-nav">
+    <button class="btn sm ghost" id="obPrev">← Indietro</button>
+    <div class="ob-dots" id="obDots"></div>
+    <button class="btn sm" id="obNext">Avanti →</button>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="viewApp" class="hidden">
+  <div class="topbar">
+    <div class="brand"><span class="nb"><i></i><i></i><i></i></span> Jotunheimen 2026</div>
+    <div class="user">
+      <span class="avatar" id="topAvatar"></span>
+      <span id="topNick"></span>
+      <button class="logout" id="btnLogout">esci</button>
+    </div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div class="page-bg" id="pageBg"></div>
+  <div class="page" id="pageContent"></div>
+</div>
+
+<!-- ============ MODALS ============ -->
+<div class="modal" id="photoModal">
+  <div class="modal-card">
+    <h3>📷 Aggiungi una foto</h3>
+    <label>Posizione</label>
+    <div class="pos-toggle">
+      <button id="posGps" class="on">📍 Posizione attuale</button>
+      <button id="posMap">🗺 Tocca sulla mappa</button>
+    </div>
+    <div id="posStatus" style="font-size:12px;color:var(--slate-light);margin-top:7px"></div>
+    <label>Foto</label>
+    <div class="file-drop" id="fileDrop">Tocca per scegliere una foto</div>
+    <input type="file" id="fileInput" accept="image/*" class="hidden">
+    <label>Didascalia</label>
+    <input type="text" id="photoCaption" placeholder="Dove siamo, cosa si vede..." maxlength="300">
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal('photoModal')">Annulla</button>
+      <button class="btn" id="btnUpload" disabled>Pubblica</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="commentModal">
+  <div class="modal-card">
+    <h3>💬 Commento sul percorso</h3>
+    <div id="cmtPos" style="font-size:12px;color:var(--slate-light)"></div>
+    <label>Testo</label>
+    <textarea id="commentText" placeholder="Es: qui il guado è facile, acqua buona..." maxlength="600"></textarea>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal('commentModal')">Annulla</button>
+      <button class="btn" id="btnComment">Pubblica</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="checkinModal">
+  <div class="modal-card">
+    <h3>📍 Siamo qui</h3>
+    <div id="ciStatus" style="font-size:13px;color:var(--slate-light)">Recupero la posizione GPS…</div>
+    <label>Nota (facoltativa)</label>
+    <input type="text" id="checkinNote" placeholder="Es: pausa pranzo al lago" maxlength="200">
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal('checkinModal')">Annulla</button>
+      <button class="btn" id="btnCheckin" disabled>Pubblica posizione</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  DATI STATICI DEL PROGRAMMA
+// ============================================================
+const MEMBERS = [
+  ['gigi','Gigi','Luigi Boldrin'],['salva','Salva','Enrico Salvalaggio'],['dalca','Dalca','Mattia Dal Castello'],
+  ['matteo','Matte','Matteo Marcellin'],['seba','Seba','Sebastiano Francescato'],['semma','Semma','Emma Scabbia'],
+  ['dade','Dade','Davide Girotto'],['zayn','Zayn','Luca Zanatta'],['bianc','Bianc','Luca Bianchin']
+];
+const AVCOLORS={gigi:'#0ea5e9',salva:'#8b5cf6',dalca:'#f59e0b',matteo:'#dc2626',seba:'#10b981',semma:'#ec4899',dade:'#6366f1',zayn:'#14b8a6',bianc:'#f97316'};
+function avColor(id){return AVCOLORS[id]||'#64748b'}
+
+// Immagini di sfondo per pagina (ciclo parallax onboarding)
+const OB_BACKGROUNDS=['/assets/hero_fiordo.jpg','/assets/hero_bergen_color.jpg','/assets/hero_aurora.jpg','/assets/hero_fiordo.jpg','/assets/hero_bergen_day.jpg','/assets/hero_panorama.jpg','/assets/hero_bergen_snow.jpg'];
+const PAGE_BG={programma:'/assets/bg_fiordo.jpg',scelte:'/assets/bg_panorama.jpg',checklist:'/assets/bg_tenda.jpg',pasti:'/assets/bg_orso.jpg',mappa:'/assets/bg_bergen_color.jpg',admin:'/assets/bg_bandiera.jpg'};
+
+// PROGRAMMA giorno per giorno
+const DAYS=[
+  {n:1,date:'VEN 8 AGO',title:'Volo per Oslo',sub:'Partenza e arrivo in Norvegia',body:'Volo in serata. Atterraggio a Oslo Gardermoen attorno a mezzanotte, nella notte tra l\'8 e il 9. Pernottamento in hotel vicino all\'aeroporto per ripartire riposati la mattina.',stats:['✈ Arrivo ~24:00','🏨 Hotel aeroporto'],night:'Hotel a Oslo (aeroporto)'},
+  {n:2,date:'DOM 9 AGO',title:'Spesa e trasferimento a Gjendesheim',sub:'In cammino verso il Jotunheimen',body:'Al mattino: spesa del cibo fresco e delle bombolette per il gas (le bombolette NON si possono portare in aereo, si comprano qui). Bus per Gjendesheim: partenza 08:30, arrivo 13:30. Arrivo al rifugio nel pomeriggio, cena, sauna e notte a Gjendesheim.',stats:['🚌 Bus 08:30→13:30','🛒 Spesa + gas','🧖 Sauna','🛏 Rifugio DNT'],night:'Rifugio Gjendesheim'},
+  {n:3,date:'LUN 10 AGO',title:'Gjendesheim → Memurubu',sub:'via Besseggen · la tappa regina',body:'Colazione presto e pranzo al sacco preparato dal rifugio. Traversata del crinale di Besseggen (fino a 1732 m), il tratto più spettacolare. Discesa a Memurubu, sul lago Gjende. Notte in tenda, con servizi DNT a pagamento per bagno e docce.',stats:['📏 13,5 km','⛰ +1054 / −1016 m','🏔 max 1732 m','⛺ Tenda'],night:'Tenda a Memurubu'},
+  {n:4,date:'MAR 11 AGO',title:'Memurubu → Altopiano',sub:'nel cuore del parco',body:'Colazione a fornelletto in tenda. Si risale verso l\'altopiano centrale, quota ondulata 1200-1500 m senza difficoltà tecniche. Pranzo al sacco lungo il cammino. Si arriva al punto a metà strada verso Leirvassbu e si monta il campo. Nulla da prenotare, bivacco libero.',stats:['📏 15,2 km','⛰ +776 / −542 m','⛺ Tenda libera'],night:'Tenda in quota (~1276 m)'},
+  {n:5,date:'MER 12 AGO',title:'Altopiano → Leirvassbu',sub:'arrivo al base camp',body:'Colazione a fornelletto e smontaggio tende. Tappa breve e in salita dolce fino a Leirvassbu (1402 m), ai piedi del Galdhøpiggen. Da decidere insieme: dormire al rifugio o in tenda. Cena al rifugio o a fornelletto secondo la scelta.',stats:['📏 12,8 km','⛰ +279 / −153 m','🏕 Base camp'],night:'Leirvassbu (rifugio o tenda)'},
+  {n:6,date:'GIO 13 AGO',title:'Giornata a Leirvassbu + bus notturno',sub:'escursione e rientro',body:'Giornata di escursione dal base camp, potenzialmente lasciando le tende piantate con dentro il superfluo. Un giro in un posto bello, tutti insieme. Rientro entro le 20:00 per prendere il bus notturno delle 20 che riporta a Oslo in nottata.',stats:['🥾 Escursione','🎒 Tende lasciate','🚌 Bus ore 20:00'],night:'Bus notturno → Oslo'},
+  {n:7,date:'VEN 14 AGO',title:'Ritorno a Oslo',sub:'città e riposo',body:'Arrivo a Oslo la mattina presto con gli zaini grandi. Giornata in un parco in attesa del check-in in ostello/B&B (prenotato per le notti del 14 e 15). Alla sera, cena fuori e festa moderata.',stats:['🌆 Oslo','🏞 Parco','🍽 Cena + festa'],night:'Ostello / B&B a Oslo'},
+  {n:8,date:'SAB 15 AGO',title:'Oslo — Munch e città',sub:'cultura',body:'Visita al Museo Munch per vedere L\'Urlo (biglietto da prenotare). Resto della giornata da decidere insieme, tra quartieri, fiordo e locali della città.',stats:['🖼 Munch · L\'Urlo','🚶 Città'],night:'Ostello / B&B a Oslo'},
+  {n:9,date:'DOM 16 AGO',title:'Rientro',sub:'ultima mattina',body:'Ultima mattinata a Oslo, poi volo di rientro. Fine del viaggio.',stats:['✈ Volo di ritorno'],night:'—'}
+];
+
+// SCELTE da raccogliere
+const CHOICES=[
+  {id:'sauna9',day:'DOM 9 AGO',q:'Sauna a Gjendesheim la sera dell\'arrivo?',d:'Costa ~200 NOK/ora, va prenotata in anticipo. Chi la farebbe?',opts:[['si','Sì, ci sto'],['no','No, passo'],['forse','Dipende dall\'orario di arrivo']]},
+  {id:'leir12',day:'MER 12 AGO',q:'A Leirvassbu: rifugio o tenda?',d:'Il rifugio (da ~100€/notte) offre letto e cena calda; la tenda è gratis ma con servizi a pagamento. In entrambi i casi va chiamato per prenotare.',opts:[['rifugio','Rifugio — letto e cena'],['tenda','Tenda — spendo meno'],['indeciso','Ancora indeciso']]},
+  {id:'esc13',day:'GIO 13 AGO',q:'Che tipo di escursione il 13?',d:'Giornata libera dal base camp prima del bus serale. Verso cosa puntiamo?',opts:[['vetta','Una vetta impegnativa (Galdhøpiggen/Glittertind)'],['laghi','Giro tranquillo tra laghi e ghiacciai'],['relax','Mezza giornata soft, poi relax']]},
+  {id:'formula',day:'DA DECIDERE',q:'Dopo Leirvassbu, quale formula?',d:'La struttura del viaggio dipende da questa scelta di gruppo. Cosa preferisci?',opts:[['citta','Rientro a Oslo e giorni in città'],['basecamp','Più giorni a Leirvassbu'],['traversata','Traversata completa fino a Gjendebu']]},
+  {id:'oslo15',day:'SAB 15 AGO',q:'Oltre a Munch, cosa a Oslo il 15?',d:'Idee per il pomeriggio in città dopo il museo.',opts:[['fiordo','Giro in barca sul fiordo'],['quartieri','Quartieri e street food (Grünerløkka)'],['vigeland','Parco Vigeland e relax'],['shopping','Shopping e giro libero']]}
+];
+
+// CHECKLIST — categorie (base dalla lista + aggiunte Norvegia)
+const CHECKLIST=[
+  {cat:'Fondamentale',ic:'🎒',items:['Zaino da trekking','Scarponcini rodati','Borraccia / sacca idrica','Occhiali da sole','Torcia frontale + pile','Powerbank + cavi','Documenti + tessera sanitaria','Contanti (NOK) + carta','Telefono']},
+  {cat:'⚠ Da comprare a Oslo',ic:'🛒',warn:true,items:['Bombolette gas (NON in aereo!)','Cibo fresco per i primi giorni']},
+  {cat:'Vestiti',ic:'👕',items:['Giacca impermeabile / guscio','Giacca a vento','Pile / maglione caldo','Pantaloni trekking (lunghi)','Pantaloni corti / separabili','T-shirt tecniche (x3)','Intimo tecnico','Calze trekking (x4)','Cappello / buff','Guanti leggeri','Costume (sauna/lago)']},
+  {cat:'Per dormire',ic:'🌙',items:['Sacco a pelo caldo','Materassino','Cuscino gonfiabile','Tappi per le orecchie','Vestiti asciutti solo per la notte']},
+  {cat:'Tenda (da dividere nel gruppo)',ic:'⛺',items:['Fly + inner','Pali','Picchetti','Tiranti','Groundsheet / telo','Sacco impermeabile tenda']},
+  {cat:'Per mangiare',ic:'🍽',items:['Fornelletto','Bombola grande','Gavetta / pentolino','Posate','Gavettino / tazza','Detersivo + spugnetta','Accendino + fiammiferi','Coltellino']},
+  {cat:'Primo soccorso',ic:'🩹',items:['Cerotti + Steri strips','Disinfettante cutaneo','Pinzetta zecche','Paracetamolo / ibuprofene','Antiacido','Caramelle gola','Crema solare','Medicinali personali','Cerotti anti-vesciche','Liquirizia (cali pressione)']},
+  {cat:'Igiene',ic:'🧼',items:['Asciugamano microfibra','Spazzolino + dentifricio','Sapone di Marsiglia','Salviette umidificate','Salviette antibatteriche','Deodorante','Burrocacao','Infradito per doccia','Prodotti mestruali','Carta igienica']},
+  {cat:'Acqua & natura (Norvegia)',ic:'💧',items:['Filtro acqua / pastiglie','Repellente zanzare','Sacchi impermeabili interni','Sacchetti spazzatura','Coperta termica emergenza']},
+  {cat:'Varie',ic:'🎯',items:['2 cordini + moschettone','Poncho','Penna + foglietti','Mollette + elastici','Bastoncini da trekking']}
+];
+
+// WAYPOINT per la mappa (allineati a track.json)
+let TRACK=null;
+
+// ============================================================
+//  STATO GLOBALE + API
+// ============================================================
+let ME=null, TOKEN=null, STATE=null, CURRENT_TAB='programma';
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+
+function toast(msg,isErr){const t=$('#toast');t.textContent=msg;t.className='show'+(isErr?' err':'');setTimeout(()=>t.className='',2800);}
+function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+function fmtDate(ts){return new Date(ts).toLocaleString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}
+function av(id,nick,size){const s=size||30;return `<span class="avatar" style="width:${s}px;height:${s}px;font-size:${s*0.42}px;background:${avColor(id)}">${(nick||'?')[0]}</span>`}
+
+async function api(path,body){
+  const opt=body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{};
+  const r=await fetch(path,opt);
+  const d=await r.json().catch(()=>({error:'Risposta non valida dal server'}));
+  if(!r.ok) throw new Error(d.error||('Errore '+r.status));
+  return d;
+}
+
+// ============================================================
+//  LOGIN
+// ============================================================
+let selMember=null;
+function buildLogin(){
+  const g=$('#memberGrid');
+  g.innerHTML=MEMBERS.map(([id,nick,name])=>`
+    <div class="mcard" data-id="${id}" onclick="selMemberFn('${id}')">
+      ${av(id,nick,44)}<b>${nick}</b><small>${name.split(' ')[0]}</small>
+    </div>`).join('');
+}
+window.selMemberFn=function(id){
+  selMember=id;
+  $$('.mcard').forEach(c=>c.classList.toggle('sel',c.dataset.id===id));
+  updateLoginBtn();
+  $('#codeInput').focus();
+};
+function updateLoginBtn(){
+  $('#btnLogin').disabled=!(selMember && $('#codeInput').value.trim().length>=8);
+}
+$('#codeInput').addEventListener('input',e=>{
+  let v=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(v.length>4)v=v.slice(0,4)+'-'+v.slice(4,8);
+  e.target.value=v;
+  updateLoginBtn();
+});
+$('#codeInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('#btnLogin').disabled)doLogin();});
+$('#btnLogin').addEventListener('click',doLogin);
+
+async function doLogin(){
+  const btn=$('#btnLogin');btn.disabled=true;btn.textContent='Verifica…';
+  $('#loginErr').textContent='';
+  try{
+    const d=await api('/api/auth',{action:'login',member:selMember,code:$('#codeInput').value.trim()});
+    TOKEN=d.token;ME=d.me;
+    localStorage.setItem('jot_token',TOKEN);
+    await enterApp(true);
+  }catch(e){
+    $('#loginErr').textContent=e.message;
+    btn.disabled=false;btn.textContent='Entra';
+  }
+}
+$('#btnLogout').addEventListener('click',()=>{
+  localStorage.removeItem('jot_token');location.reload();
+});
+
+async function tryAutoLogin(){
+  const t=localStorage.getItem('jot_token');
+  if(!t)return false;
+  try{
+    const d=await api('/api/auth',{action:'verify',token:t});
+    TOKEN=t;ME=d.me;
+    await enterApp(false);
+    return true;
+  }catch(e){localStorage.removeItem('jot_token');return false;}
+}
+
+// carica stato e decide se mostrare onboarding o app
+async function enterApp(justLoggedIn){
+  await loadState();
+  const myChoices=(STATE.choices&&STATE.choices[ME.id])||{};
+  const allAnswered=CHOICES.every(c=>myChoices[c.id]);
+  $('#viewLogin').classList.add('hidden');
+  if(justLoggedIn && !allAnswered){
+    startOnboarding();
+  }else{
+    showApp();
+  }
+}
+
+async function loadState(){
+  STATE=await api('/api/data?type=state&token='+encodeURIComponent(TOKEN));
+}
+
+// ============================================================
+//  ONBOARDING — slide delle scelte con parallax
+// ============================================================
+let obIndex=0, obChoices={};
+function startOnboarding(){
+  obIndex=0;
+  const myChoices=(STATE.choices&&STATE.choices[ME.id])||{};
+  obChoices={};
+  CHOICES.forEach(c=>{if(myChoices[c.id])obChoices[c.id]=myChoices[c.id].value;});
+  $('#viewOnboard').classList.remove('hidden');
+  $('#obBg1').style.backgroundImage=`url('${OB_BACKGROUNDS[0]}')`;
+
+  // slide: intro + una per scelta + outro
+  const track=$('#obTrack');
+  let slides='';
+  // intro
+  slides+=`<div class="ob-slide"><div class="ob-card" style="text-align:center">
+    <div class="ob-date">Ciao ${esc(ME.nick)}!</div>
+    <h2>Prima di iniziare,<br>qualche scelta insieme</h2>
+    <p>Per organizzare il viaggio abbiamo bisogno della tua preferenza su alcune cose. Scorri le schermate e scegli: le risposte di tutti finiscono in una tabella condivisa che ci aiuta a decidere.</p>
+    <div class="badges"><span class="badge">${CHOICES.length} scelte</span><span class="badge">2 minuti</span><span class="badge">Modificabili dopo</span></div>
+  </div></div>`;
+  // scelte
+  CHOICES.forEach((c,i)=>{
+    slides+=`<div class="ob-slide"><div class="ob-card">
+      <div class="ob-date">${c.day} · ${i+1}/${CHOICES.length}</div>
+      <h2>${esc(c.q)}</h2>
+      <p>${esc(c.d)}</p>
+      <div class="opt-grid" data-choice="${c.id}">
+        ${c.opts.map(([v,l])=>`<button class="opt ${obChoices[c.id]===v?'sel':''}" data-val="${v}" onclick="obPick('${c.id}','${v}')">
+          <span class="ck">✓</span><span>${esc(l)}</span></button>`).join('')}
+      </div>
+    </div></div>`;
+  });
+  // outro
+  slides+=`<div class="ob-slide"><div class="ob-card" style="text-align:center">
+    <div class="ob-date">Tutto qui!</div>
+    <h2>Grazie 🎉</h2>
+    <p>Le tue scelte sono salvate. Ora puoi esplorare tutto il programma, la tua checklist personale, la pianificazione dei pasti e la mappa del percorso.</p>
+    <button class="btn" style="margin-top:20px" onclick="finishOnboarding()">Entra nell'area gruppo →</button>
+  </div></div>`;
+  track.innerHTML=slides;
+
+  buildObDots();
+  updateOb();
+}
+
+function buildObDots(){
+  const total=CHOICES.length+2;
+  $('#obDots').innerHTML=Array.from({length:total},(_, i)=>`<span class="ob-dot" data-i="${i}"></span>`).join('');
+}
+
+window.obPick=async function(cid,val){
+  obChoices[cid]=val;
+  const grid=document.querySelector(`.opt-grid[data-choice="${cid}"]`);
+  grid.querySelectorAll('.opt').forEach(o=>o.classList.toggle('sel',o.dataset.val===val));
+  $('#obHint').classList.remove('show');
+  // salva subito in background
+  try{
+    const d=await api('/api/data',{action:'setChoice',token:TOKEN,nick:ME.nick,choiceId:cid,value:val});
+    STATE.choices=d.choices;
+  }catch(e){toast(e.message,true);}
+  // auto-avanza dopo un attimo
+  setTimeout(()=>{if(obIndex<CHOICES.length+1)obNext();},420);
+};
+
+function currentChoiceId(){
+  // slide 0 = intro; slide 1..N = scelte; slide N+1 = outro
+  if(obIndex>=1 && obIndex<=CHOICES.length) return CHOICES[obIndex-1].id;
+  return null;
+}
+
+function obNext(){
+  const cid=currentChoiceId();
+  if(cid && !obChoices[cid]){$('#obHint').classList.add('show');return;}
+  if(obIndex<CHOICES.length+1){obIndex++;updateOb();}
+}
+function obPrev(){if(obIndex>0){obIndex--;updateOb();}}
+$('#obNext').addEventListener('click',obNext);
+$('#obPrev').addEventListener('click',obPrev);
+
+function updateOb(){
+  const total=CHOICES.length+2;
+  $('#obTrack').style.transform=`translateX(-${obIndex*100}vw)`;
+  // parallax sfondo: si muove poco e "in avanti"
+  const bg1=$('#obBg1'),bg2=$('#obBg2');
+  const shift=obIndex*-4.5; // vw, molto meno del 100 delle card
+  const bgImg=OB_BACKGROUNDS[obIndex%OB_BACKGROUNDS.length];
+  // crossfade quando cambia immagine
+  const activeBg=obIndex%2===0?bg1:bg2;
+  const otherBg=obIndex%2===0?bg2:bg1;
+  activeBg.style.backgroundImage=`url('${bgImg}')`;
+  activeBg.style.transform=`translateX(${shift}vw) scale(1.08)`;
+  activeBg.style.opacity=1;
+  otherBg.style.opacity=0;
+  // dots
+  $$('#obDots .ob-dot').forEach((d,i)=>{
+    d.classList.toggle('on',i===obIndex);
+    d.classList.toggle('done',i<obIndex);
+  });
+  // nav buttons
+  $('#obPrev').style.visibility=obIndex===0?'hidden':'visible';
+  const cid=currentChoiceId();
+  $('#obNext').style.visibility=(obIndex===CHOICES.length+1)?'hidden':'visible';
+  $('#obHint').classList.remove('show');
+}
+
+window.finishOnboarding=async function(){
+  await loadState();
+  $('#viewOnboard').classList.add('hidden');
+  showApp();
+};
+
+// ============================================================
+//  APP SHELL + TABS
+// ============================================================
+const TABS=[
+  {id:'programma',ic:'📅',label:'Programma'},
+  {id:'scelte',ic:'🗳',label:'Scelte'},
+  {id:'checklist',ic:'✅',label:'Checklist'},
+  {id:'pasti',ic:'🍲',label:'Pasti'},
+  {id:'mappa',ic:'🗺',label:'Mappa'}
+];
+function showApp(){
+  $('#viewApp').classList.remove('hidden');
+  $('#topAvatar').outerHTML=av(ME.id,ME.nick,32).replace('class="avatar"','class="avatar" id="topAvatar"');
+  $('#topNick').textContent=ME.nick;
+  const tabDefs=[...TABS];
+  if(ME.admin)tabDefs.push({id:'admin',ic:'🔑',label:'Admin'});
+  $('#tabs').innerHTML=tabDefs.map(t=>`<button class="tab ${t.id===CURRENT_TAB?'on':''}" data-tab="${t.id}" onclick="switchTab('${t.id}')"><span class="ic">${t.ic}</span>${t.label}</button>`).join('');
+  switchTab(CURRENT_TAB);
+}
+window.switchTab=function(id){
+  CURRENT_TAB=id;
+  $$('.tab').forEach(t=>t.classList.toggle('on',t.dataset.tab===id));
+  $('#pageBg').style.backgroundImage=`url('${PAGE_BG[id]||PAGE_BG.programma}')`;
+  window.scrollTo(0,0);
+  const c=$('#pageContent');
+  if(id==='programma')renderProgramma(c);
+  else if(id==='scelte')renderScelte(c);
+  else if(id==='checklist')renderChecklist(c);
+  else if(id==='pasti')renderPasti(c);
+  else if(id==='mappa')renderMappa(c);
+  else if(id==='admin')renderAdmin(c);
+};
+
+// ============================================================
+//  TAB: PROGRAMMA
+// ============================================================
+function renderProgramma(c){
+  c.innerHTML=`
+    <h2 class="pt">Il programma</h2>
+    <p class="pd">Nove giorni, dall'8 al 16 agosto. Ecco il piano completo giorno per giorno.</p>
+    <div class="elev-wrap">
+      <img src="/assets/elevation.png" alt="Profilo altimetrico">
+      <div style="font-size:11.5px;color:var(--slate-light);text-align:center;margin-top:8px">Profilo altimetrico della traversata · 68 km · +2460 m</div>
+    </div>
+    ${DAYS.map(d=>`
+      <div class="day-card">
+        <div class="day-head">
+          <div class="day-num">${d.n}<small>GIORNO</small></div>
+          <div><h3>${esc(d.title)}</h3><div class="sub">${esc(d.date)} · ${esc(d.sub)}</div></div>
+        </div>
+        <div class="day-body">
+          ${d.stats.map(s=>`<span class="stat">${esc(s)}</span>`).join('')}
+          <p style="margin-top:8px">${esc(d.body)}</p>
+          <div style="margin-top:12px;font-size:12.5px;color:var(--slate-light)">🌙 <b style="color:var(--navy)">Notte:</b> ${esc(d.night)}</div>
+        </div>
+      </div>`).join('')}
+  `;
+}
+
+// ============================================================
+//  TAB: SCELTE (riepilogo condiviso)
+// ============================================================
+function renderScelte(c){
+  const myChoices=(STATE.choices&&STATE.choices[ME.id])||{};
+  c.innerHTML=`
+    <h2 class="pt">Le scelte del gruppo</h2>
+    <p class="pd">Le preferenze di tutti, in tempo reale. Tocca un'opzione per cambiare la tua. Servono a decidere insieme.</p>
+    <div id="choicesList"></div>
+  `;
+  const list=$('#choicesList');
+  list.innerHTML=CHOICES.map(ch=>{
+    const tally={};ch.opts.forEach(([v])=>tally[v]=[]);
+    MEMBERS.forEach(([mid,nick])=>{
+      const mc=STATE.choices&&STATE.choices[mid];
+      if(mc&&mc[ch.id]&&tally[mc[ch.id].value]!==undefined)tally[mc[ch.id].value].push([mid,nick]);
+    });
+    const mine=myChoices[ch.id]?myChoices[ch.id].value:null;
+    const answered=MEMBERS.filter(([mid])=>{const mc=STATE.choices&&STATE.choices[mid];return mc&&mc[ch.id];}).length;
+    return `<div class="choice-block">
+      <h3>${esc(ch.q)}</h3>
+      <div class="cd">${esc(ch.day)} · ${answered}/${MEMBERS.length} hanno risposto</div>
+      ${ch.opts.map(([v,l])=>`
+        <div class="copt ${mine===v?'mine':''}">
+          <div class="copt-top"><b>${esc(l)}</b><span class="copt-count">${tally[v].length}</span></div>
+          ${tally[v].length?`<div class="copt-chips">${tally[v].map(([mid,nick])=>`<span class="mini-chip">${av(mid,nick,18)}${esc(nick)}</span>`).join('')}</div>`:''}
+          ${mine!==v?`<button class="pick" onclick="setChoice('${ch.id}','${v}')">Scelgo questa</button>`:'<div style="margin-top:8px;font-size:12px;color:var(--navy);font-weight:600">✓ La tua scelta</div>'}
+        </div>`).join('')}
+    </div>`;
+  }).join('');
+}
+window.setChoice=async function(cid,val){
+  try{
+    const d=await api('/api/data',{action:'setChoice',token:TOKEN,nick:ME.nick,choiceId:cid,value:val});
+    STATE.choices=d.choices;
+    renderScelte($('#pageContent'));
+    toast('Scelta aggiornata');
+  }catch(e){toast(e.message,true);}
+};
+
+// ============================================================
+//  TAB: CHECKLIST
+// ============================================================
+function renderChecklist(c){
+  const mine=(STATE.checklist&&STATE.checklist[ME.id])||{};
+  const allItems=CHECKLIST.flatMap(cat=>cat.items);
+  const done=allItems.filter(it=>mine[itemKey(it)]).length;
+  const pct=Math.round(done/allItems.length*100);
+  c.innerHTML=`
+    <h2 class="pt">La tua checklist</h2>
+    <p class="pd">Spunta l'attrezzatura man mano che la prepari. È personale, ma puoi vedere a che punto sono gli altri.</p>
+    <div class="ck-progress">
+      <div class="row"><span style="font-size:13px;color:var(--slate-light);font-weight:600">PRONTO AL</span><b>${pct}%</b></div>
+      <div class="pbar"><div class="pbar-fill" id="ckFill" style="width:0%"></div></div>
+      <div style="font-size:12px;color:var(--slate-light);margin-top:8px">${done} di ${allItems.length} voci</div>
+      <div class="others" id="ckOthers"></div>
+    </div>
+    <div id="catList">
+      ${CHECKLIST.map((cat,ci)=>{
+        const catDone=cat.items.filter(it=>mine[itemKey(it)]).length;
+        return `<div class="cat ${ci===0?'open':''}">
+          <div class="cat-head" onclick="this.parentElement.classList.toggle('open')">
+            <h3>${cat.ic} ${esc(cat.cat)}</h3>
+            <div style="display:flex;align-items:center;gap:10px"><span class="cnt">${catDone}/${cat.items.length}</span><span class="arr">▼</span></div>
+          </div>
+          <div class="cat-items">
+            ${cat.items.map(it=>{
+              const k=itemKey(it);
+              return `<div class="ck-item ${mine[k]?'done':''} ${cat.warn?'warn':''}" onclick="toggleItem('${k}')">
+                <span class="box">✓</span><span class="lbl">${cat.warn?'<b>':''}${esc(it)}${cat.warn?'</b>':''}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="zaino-guide">
+      <h3>🎒 Come organizzare lo zaino</h3>
+      <b>In fondo:</b> tenda e vestiti pesanti (peso poco usato in basso).<br>
+      <b>Al centro, vicino alla schiena:</b> il più pesante — cibo, bombola, fornelletto.<br>
+      <b>In alto (brain):</b> primo soccorso e snack, a portata di mano.<br>
+      <b>Tasche laterali:</b> borraccia, poncho, infradito.<br>
+      <b>Tasca frontale:</b> ciò che serve subito — giacca, guanti.<br>
+      <b>Alla partenza addosso:</b> intimo, calze, t-shirt, pantaloni, maglione, scarponi, giacca.
+    </div>
+  `;
+  requestAnimationFrame(()=>{$('#ckFill').style.width=pct+'%';});
+  renderCkOthers();
+}
+function itemKey(it){return it.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,50)}
+function renderCkOthers(){
+  const el=$('#ckOthers');if(!el)return;
+  const allItems=CHECKLIST.flatMap(cat=>cat.items);
+  el.innerHTML=MEMBERS.filter(([mid])=>mid!==ME.id).map(([mid,nick])=>{
+    const mc=(STATE.checklist&&STATE.checklist[mid])||{};
+    const d=allItems.filter(it=>mc[itemKey(it)]).length;
+    const p=Math.round(d/allItems.length*100);
+    return `<span class="other-p">${av(mid,nick,20)}${esc(nick)} ${p}%</span>`;
+  }).join('');
+}
+let ckSaveTimer=null;
+window.toggleItem=function(k){
+  const mine=(STATE.checklist&&STATE.checklist[ME.id])||{};
+  if(mine[k])delete mine[k];else mine[k]=true;
+  if(!STATE.checklist)STATE.checklist={};
+  STATE.checklist[ME.id]=mine;
+  renderChecklist($('#pageContent'));
+  clearTimeout(ckSaveTimer);
+  ckSaveTimer=setTimeout(async()=>{
+    try{await api('/api/data',{action:'setChecklist',token:TOKEN,nick:ME.nick,items:mine});}
+    catch(e){toast(e.message,true);}
+  },700);
+};
+
+// ============================================================
+//  TAB: PASTI (blog per slot)
+// ============================================================
+const MEAL_ICONS={spesa:'🛒',rifugio:'🍽',sacco:'🥪',fornelletto:'🔥'};
+function renderPasti(c){
+  const slots=(STATE.meals&&STATE.meals.slots)||[];
+  // raggruppa per data
+  const byDate={};
+  slots.forEach(s=>{(byDate[s.date]=byDate[s.date]||[]).push(s);});
+  c.innerHTML=`
+    <h2 class="pt">Pianificazione pasti</h2>
+    <p class="pd">Ogni pasto ha il suo spazio. Scrivi cosa porti o cosa cuciniamo — resta tutto tracciato con il nome di chi l'ha scritto, come un diario condiviso.</p>
+    <div id="mealsList">
+    ${Object.keys(byDate).map(date=>`
+      <div class="meal-date">${esc(date)}</div>
+      ${byDate[date].map(s=>renderSlot(s)).join('')}
+    `).join('')}
+    </div>
+  `;
+}
+function renderSlot(s){
+  return `<div class="slot">
+    <div class="slot-head">
+      <span class="slot-type">${MEAL_ICONS[s.type]||'🍴'}</span>
+      <b>${esc(s.label)}</b>
+      <span class="n">${s.posts.length} ${s.posts.length===1?'nota':'note'}</span>
+    </div>
+    <div class="posts">
+      ${s.posts.length?s.posts.map(p=>`
+        <div class="post">
+          ${av(p.member,p.nick,30)}
+          <div class="body">
+            <div class="who">${esc(p.nick)}<span class="when">${fmtDate(p.ts)}</span></div>
+            <div class="txt">${esc(p.text)}</div>
+          </div>
+          ${p.member===ME.id?`<button class="del" onclick="delMealPost('${s.id}','${p.id}')">×</button>`:''}
+        </div>`).join(''):'<div class="no-posts">Ancora niente qui. Scrivi tu la prima nota!</div>'}
+    </div>
+    <div class="add-post">
+      <input type="text" id="mp_${s.id}" placeholder="Aggiungi cosa porti / si cucina..." maxlength="1000" onkeydown="if(event.key==='Enter')addMealPost('${s.id}')">
+      <button onclick="addMealPost('${s.id}')">Invia</button>
+    </div>
+  </div>`;
+}
+window.addMealPost=async function(slotId){
+  const inp=$('#mp_'+slotId);const text=inp.value.trim();
+  if(!text)return;
+  inp.disabled=true;
+  try{
+    const d=await api('/api/data',{action:'addMealPost',token:TOKEN,nick:ME.nick,slotId,text});
+    STATE.meals=d.meals;
+    renderPasti($('#pageContent'));
+    toast('Aggiunto');
+  }catch(e){toast(e.message,true);inp.disabled=false;}
+};
+window.delMealPost=async function(slotId,postId){
+  try{
+    const d=await api('/api/data',{action:'delMealPost',token:TOKEN,nick:ME.nick,slotId,postId});
+    STATE.meals=d.meals;
+    renderPasti($('#pageContent'));
+  }catch(e){toast(e.message,true);}
+};
+
+// ============================================================
+//  TAB: MAPPA (social + commenti + checkin)
+// ============================================================
+let gmap=null,gLayers={},elevChart=null,mapClickMode=null,pendingLatLng=null;
+async function renderMappa(c){
+  c.innerHTML=`
+    <h2 class="pt">La mappa del cammino</h2>
+    <p class="pd">Il percorso completo con i punti tappa. Carica foto e commenti agganciandoli al punto esatto: appariranno anche nella pagina pubblica.</p>
+    <div id="gmap"></div>
+    <div class="map-fabs">
+      <button class="fab" id="fabPhoto" onclick="openPhotoModal()">📷 Aggiungi foto</button>
+      <button class="fab" id="fabComment" onclick="startCommentMode()">💬 Commenta un punto</button>
+      <button class="fab" id="fabCheckin" onclick="openCheckinModal()">📍 Siamo qui</button>
+    </div>
+    <div class="map-note">Suggerimento: per foto e commenti puoi usare la tua posizione GPS oppure toccare un punto preciso sulla mappa.</div>
+    <div class="chart-wrap"><canvas id="elevChart"></canvas></div>
+  `;
+  if(!TRACK){TRACK=await(await fetch('/assets/track.json')).json();}
+  setTimeout(()=>initGmap(),60);
+}
+function initGmap(){
+  gmap=L.map('gmap');
+  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{attribution:'© OpenTopoMap',maxZoom:16}).addTo(gmap);
+  // tappe
+  TRACK.stages.forEach(st=>{
+    const seg=TRACK.points.filter(p=>p[3]>=st.from&&p[3]<=st.to).map(p=>[p[0],p[1]]);
+    L.polyline(seg,{color:'#fff',weight:7,opacity:.9}).addTo(gmap);
+    L.polyline(seg,{color:st.color,weight:4,opacity:.95}).addTo(gmap).bindTooltip(`${st.label} (${st.date})`,{sticky:true});
+  });
+  // waypoint
+  TRACK.waypoints.forEach(w=>{
+    const cls=w.type==='hut'?'hut-ico':w.type==='peak'?'peak-ico':'camp-ico';
+    const emoji=w.type==='hut'?'⌂':w.type==='peak'?'▲':'⛺';
+    L.marker([w.lat,w.lon],{icon:L.divIcon({className:'',html:`<div class="${cls}">${emoji}</div>`,iconSize:[26,26],iconAnchor:[13,13]})}).addTo(gmap)
+      .bindPopup(`<b style="font-family:Outfit;color:#0c4a6e">${esc(w.name)}</b><br><span style="font-size:12px">${esc(w.desc)}</span>${w.night?`<br><span style="font-size:11px;color:#0ea5e9;font-weight:600">Notte del ${w.night}</span>`:''}`);
+  });
+  gmap.fitBounds(L.latLngBounds(TRACK.points.map(p=>[p[0],p[1]])),{padding:[30,30]});
+
+  gLayers.photos=L.layerGroup().addTo(gmap);
+  gLayers.comments=L.layerGroup().addTo(gmap);
+  gLayers.checkins=L.layerGroup().addTo(gmap);
+  gLayers.hover=L.layerGroup().addTo(gmap);
+
+  gmap.on('click',e=>{
+    if(mapClickMode==='comment'){
+      pendingLatLng=e.latlng;showCommentModal();mapClickMode=null;setFab('fabComment',false);
+    }else if(mapClickMode==='photo'){
+      pendingLatLng=e.latlng;$('#posStatus').textContent=`📍 Punto scelto sulla mappa (${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)})`;
+      setPosMode('map');mapClickMode=null;openModal('photoModal');checkUploadReady();
+    }
+  });
+
+  renderMapData();
+  buildElevChart();
+}
+
+function renderMapData(){
+  gLayers.photos.clearLayers();gLayers.comments.clearLayers();gLayers.checkins.clearLayers();
+  (STATE.photos||[]).forEach(p=>{
+    L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:'<div class="photo-ico">📷</div>',iconSize:[26,26],iconAnchor:[13,13]})}).addTo(gLayers.photos)
+      .bindPopup(`<div class="pop-photo"><img src="${p.file}" loading="lazy"><div class="a">${esc(p.caption||'')}<br>— ${esc(p.nick)}, ${fmtDate(p.ts)}${p.member===ME.id?`<br><button onclick="delPhoto('${p.id}')" style="color:#dc2626;background:none;border:none;text-decoration:underline;cursor:pointer;font-size:11px;padding:4px 0">elimina</button>`:''}</div></div>`);
+  });
+  (STATE.comments||[]).forEach(cm=>{
+    L.marker([cm.lat,cm.lng],{icon:L.divIcon({className:'',html:'<div class="cmt-ico">💬</div>',iconSize:[22,22],iconAnchor:[11,11]})}).addTo(gLayers.comments)
+      .bindPopup(`<div style="max-width:220px"><div style="font-size:11.5px;font-weight:700;color:#0c4a6e">${esc(cm.nick)} <span style="font-weight:400;color:#94a3b8">${fmtDate(cm.ts)}</span></div><div style="font-size:13px;margin-top:3px">${esc(cm.text)}</div>${cm.member===ME.id?`<button onclick="delComment('${cm.id}')" style="color:#dc2626;background:none;border:none;text-decoration:underline;cursor:pointer;font-size:11px;padding:4px 0">elimina</button>`:''}</div>`);
+  });
+  // checkin timeline
+  const ci=(STATE.checkins||[]).slice().sort((a,b)=>a.ts-b.ts);
+  if(ci.length){
+    ci.forEach((c,i)=>{
+      const isLast=i===ci.length-1;
+      L.marker([c.lat,c.lng],{icon:L.divIcon({className:'',html:`<div class="${isLast?'hover-dot':'camp-ico'}" style="${isLast?'width:16px;height:16px':''}"></div>`,iconSize:[16,16],iconAnchor:[8,8]}),zIndexOffset:isLast?900:0}).addTo(gLayers.checkins)
+        .bindPopup(`<b style="font-family:Outfit;color:#dc2626">${isLast?'Ultima posizione':'Check-in'}</b><br><span style="font-size:12px">${esc(c.note||'')} ${c.note?'<br>':''}${esc(c.nick)}, ${fmtDate(c.ts)}</span>${c.member===ME.id?`<br><button onclick="delCheckin('${c.id}')" style="color:#dc2626;background:none;border:none;text-decoration:underline;cursor:pointer;font-size:11px;padding:4px 0">elimina</button>`:''}`);
+    });
+  }
+}
+
+function buildElevChart(){
+  const ctx=$('#elevChart');if(!ctx)return;
+  if(elevChart)elevChart.destroy();
+  const pts=TRACK.points;
+  elevChart=new Chart(ctx,{
+    type:'line',
+    data:{labels:pts.map(p=>p[3]),datasets:[{data:pts.map(p=>p[2]),borderColor:'#1e40af',backgroundColor:'rgba(59,130,246,.15)',fill:true,borderWidth:1.5,pointRadius:0,tension:.3}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{title:i=>`Km ${i[0].label}`,label:i=>`${i.raw} m`}}},
+      scales:{x:{title:{display:true,text:'km',color:'#94a3b8',font:{size:10}},ticks:{maxTicksLimit:8,color:'#94a3b8',font:{size:9}},grid:{display:false}},
+             y:{ticks:{color:'#94a3b8',font:{size:9}},grid:{color:'#f1f5f9'}}}}
+  });
+}
+
+// ===== Modali mappa: FOTO =====
+let photoFile=null;
+function setFab(id,on){const f=$('#'+id);if(f)f.classList.toggle('on',on);}
+function setPosMode(mode){
+  $('#posGps').classList.toggle('on',mode==='gps');
+  $('#posMap').classList.toggle('on',mode==='map');
+}
+window.openPhotoModal=function(){
+  photoFile=null;pendingLatLng=null;
+  $('#fileDrop').innerHTML='Tocca per scegliere una foto';
+  $('#photoCaption').value='';
+  $('#posStatus').textContent='';
+  setPosMode('gps');
+  openModal('photoModal');
+  checkUploadReady();
+};
+$('#posGps').addEventListener('click',()=>{
+  setPosMode('gps');pendingLatLng=null;
+  $('#posStatus').textContent='Recupero posizione GPS…';
+  navigator.geolocation.getCurrentPosition(
+    pos=>{pendingLatLng={lat:pos.coords.latitude,lng:pos.coords.longitude};$('#posStatus').textContent=`📍 Posizione trovata (${pendingLatLng.lat.toFixed(4)}, ${pendingLatLng.lng.toFixed(4)})`;checkUploadReady();},
+    err=>{$('#posStatus').textContent='⚠ GPS non disponibile. Usa "Tocca sulla mappa".';},
+    {enableHighAccuracy:true,timeout:10000}
+  );
+});
+$('#posMap').addEventListener('click',()=>{
+  setPosMode('map');
+  closeModal('photoModal');
+  mapClickMode='photo';setFab('fabPhoto',true);
+  toast('Tocca il punto sulla mappa');
+});
+$('#fileDrop').addEventListener('click',()=>$('#fileInput').click());
+$('#fileInput').addEventListener('change',async e=>{
+  const f=e.target.files[0];if(!f)return;
+  $('#fileDrop').innerHTML='Comprimo l\'immagine…';
+  try{
+    photoFile=await compressImage(f);
+    $('#fileDrop').innerHTML=`<img src="${photoFile}" alt="preview">`;
+    checkUploadReady();
+  }catch(err){$('#fileDrop').innerHTML='Errore. Riprova.';toast('Errore compressione',true);}
+});
+function checkUploadReady(){
+  $('#btnUpload').disabled=!(photoFile&&pendingLatLng);
+}
+$('#btnUpload').addEventListener('click',async()=>{
+  if(!photoFile||!pendingLatLng)return;
+  const btn=$('#btnUpload');btn.disabled=true;btn.textContent='Pubblico…';
+  try{
+    const d=await api('/api/photos',{action:'upload',token:TOKEN,nick:ME.nick,lat:pendingLatLng.lat,lng:pendingLatLng.lng,caption:$('#photoCaption').value.trim(),dataUrl:photoFile});
+    STATE.photos=d.photos;
+    closeModal('photoModal');
+    renderMapData();
+    toast('Foto pubblicata! 📷');
+  }catch(e){toast(e.message,true);btn.disabled=false;btn.textContent='Pubblica';}
+});
+
+// compressione immagine lato client → JPEG max 1400px
+function compressImage(file){
+  return new Promise((res,rej)=>{
+    const img=new Image();
+    img.onload=()=>{
+      let{width:w,height:h}=img;
+      const MAX=1400;
+      if(w>h&&w>MAX){h=h*MAX/w;w=MAX;}else if(h>MAX){w=w*MAX/h;h=MAX;}
+      const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      let q=0.82,url=cv.toDataURL('image/jpeg',q);
+      while(url.length>1700000&&q>0.4){q-=0.1;url=cv.toDataURL('image/jpeg',q);}
+      URL.revokeObjectURL(img.src);
+      res(url);
+    };
+    img.onerror=rej;
+    img.src=URL.createObjectURL(file);
+  });
+}
+
+// ===== Modali mappa: COMMENTO =====
+window.startCommentMode=function(){
+  mapClickMode='comment';setFab('fabComment',true);
+  toast('Tocca il punto da commentare');
+};
+function showCommentModal(){
+  $('#cmtPos').textContent=`Punto: ${pendingLatLng.lat.toFixed(4)}, ${pendingLatLng.lng.toFixed(4)}`;
+  $('#commentText').value='';
+  openModal('commentModal');
+}
+$('#btnComment').addEventListener('click',async()=>{
+  const text=$('#commentText').value.trim();if(!text||!pendingLatLng)return;
+  const btn=$('#btnComment');btn.disabled=true;btn.textContent='Pubblico…';
+  try{
+    const d=await api('/api/data',{action:'addComment',token:TOKEN,nick:ME.nick,lat:pendingLatLng.lat,lng:pendingLatLng.lng,text});
+    STATE.comments=d.comments;
+    closeModal('commentModal');renderMapData();toast('Commento pubblicato');
+  }catch(e){toast(e.message,true);}
+  btn.disabled=false;btn.textContent='Pubblica';
+});
+
+// ===== Modali mappa: CHECK-IN =====
+window.openCheckinModal=function(){
+  pendingLatLng=null;$('#checkinNote').value='';
+  $('#ciStatus').textContent='Recupero la posizione GPS…';
+  $('#btnCheckin').disabled=true;
+  openModal('checkinModal');
+  navigator.geolocation.getCurrentPosition(
+    pos=>{pendingLatLng={lat:pos.coords.latitude,lng:pos.coords.longitude};$('#ciStatus').textContent=`📍 Posizione: ${pendingLatLng.lat.toFixed(4)}, ${pendingLatLng.lng.toFixed(4)}`;$('#btnCheckin').disabled=false;},
+    err=>{$('#ciStatus').textContent='⚠ GPS non disponibile in questo momento.';},
+    {enableHighAccuracy:true,timeout:10000}
+  );
+};
+$('#btnCheckin').addEventListener('click',async()=>{
+  if(!pendingLatLng)return;
+  const btn=$('#btnCheckin');btn.disabled=true;btn.textContent='Pubblico…';
+  try{
+    const d=await api('/api/data',{action:'addCheckin',token:TOKEN,nick:ME.nick,lat:pendingLatLng.lat,lng:pendingLatLng.lng,note:$('#checkinNote').value.trim()});
+    STATE.checkins=d.checkins;
+    closeModal('checkinModal');renderMapData();toast('Posizione pubblicata! 📍');
+  }catch(e){toast(e.message,true);}
+  btn.disabled=false;btn.textContent='Pubblica posizione';
+});
+
+window.delPhoto=async function(id){
+  if(!confirm('Eliminare questa foto?'))return;
+  try{const d=await api('/api/photos',{action:'delete',token:TOKEN,photoId:id});STATE.photos=d.photos;gmap.closePopup();renderMapData();toast('Foto eliminata');}catch(e){toast(e.message,true);}
+};
+window.delComment=async function(id){
+  try{const d=await api('/api/data',{action:'delComment',token:TOKEN,commentId:id});STATE.comments=d.comments;gmap.closePopup();renderMapData();}catch(e){toast(e.message,true);}
+};
+window.delCheckin=async function(id){
+  try{const d=await api('/api/data',{action:'delCheckin',token:TOKEN,checkinId:id});STATE.checkins=d.checkins;gmap.closePopup();renderMapData();}catch(e){toast(e.message,true);}
+};
+
+// ============================================================
+//  TAB: ADMIN (solo Matte)
+// ============================================================
+function renderAdmin(c){
+  c.innerHTML=`
+    <h2 class="pt">Pannello admin</h2>
+    <p class="pd">Rigenera i codici di accesso dei partecipanti. Il vecchio codice smette di funzionare subito. Utile per testare o se qualcuno perde il proprio.</p>
+    <div id="adminList">
+      ${MEMBERS.map(([mid,nick,name])=>`
+        <div class="admin-row">
+          ${av(mid,nick,36)}
+          <div class="info"><b>${esc(nick)}</b><small>${esc(name)}</small></div>
+          <button class="btn sm ghost" onclick="regen('${mid}','${esc(nick)}')">Rigenera codice</button>
+        </div>`).join('')}
+    </div>
+    <div id="regenResult"></div>
+    <div style="margin-top:22px;padding:16px;background:#fffbeb;border:1px solid #fde68a;border-radius:14px;font-size:12.5px;color:#92400e">
+      <b>Come funziona la distribuzione:</b> genera qui il codice di ciascuno e invialo alla persona (es. su WhatsApp). Ognuno entra scegliendo il proprio nome + il codice ricevuto. I codici sono salvati in forma cifrata: nemmeno tu puoi rileggerli dopo, puoi solo rigenerarli.
+    </div>
+  `;
+}
+window.regen=async function(mid,nick){
+  if(!confirm(`Rigenerare il codice di ${nick}? Il vecchio codice non funzionerà più.`))return;
+  try{
+    const d=await api('/api/auth',{action:'regenerate',token:TOKEN,target:mid});
+    $('#regenResult').innerHTML=`<div class="new-code"><div style="font-size:12px;color:#15803d;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Nuovo codice per ${esc(d.nick)}</div><div class="code">${esc(d.code)}</div><small>Copialo e invialo ora: non sarà più visibile dopo.</small></div>`;
+    $('#regenResult').scrollIntoView({behavior:'smooth',block:'center'});
+  }catch(e){toast(e.message,true);}
+};
+
+// ============================================================
+//  MODAL helpers + BOOT
+// ============================================================
+window.openModal=id=>$('#'+id).classList.add('open');
+window.closeModal=id=>$('#'+id).classList.remove('open');
+$$('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+// BOOT
+buildLogin();
+tryAutoLogin();
+</script>
+</body>
+</html>
