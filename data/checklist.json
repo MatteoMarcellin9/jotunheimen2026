@@ -6,6 +6,7 @@
   "torciafrontalepile": true,
   "powerbankcavi": true,
   "documentitesserasanitaria": true,
-  "contantinokcarta": true
+  "contantinokcarta": true,
+  "telefono": true
  }
 }
