@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e4d6b">
+<title>Offline — Jotunheimen 2026</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;min-height:100svh;display:flex;align-items:center;justify-content:center;padding:28px;background:linear-gradient(160deg,#1e4d6b,#3a6ea5);color:#fff;text-align:center}
+.card{max-width:420px}
+.ico{font-size:64px;margin-bottom:18px}
+h1{font-size:26px;font-weight:600;margin-bottom:12px}
+p{font-size:15px;line-height:1.6;color:#dbeafe;margin-bottom:22px}
+button{background:#fff;color:#1e4d6b;border:none;font-size:15px;font-weight:600;padding:13px 28px;border-radius:999px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="ico">⛰️</div>
+  <h1>Sei offline</h1>
+  <p>Non c'è connessione in questo momento — cosa normale tra le montagne del Jotunheimen. Le pagine già visitate restano consultabili; per il resto, riprova appena torna la rete.</p>
+  <button onclick="location.reload()">Riprova</button>
+</div>
+</body>
+</html>
