@@ -726,7 +726,7 @@ function renderChecklist(c){
   const optDone=optAll.filter(it=>mine[itemKey(it)]).length;
   const ckItem=(it,warn)=>{
     const k=itemKey(it);
-    return `<div class="ck-item ${mine[k]?'done':''} ${warn?'warn':''}" onclick="toggleItem('${k}')">
+    return `<div class="ck-item ${mine[k]?'done':''} ${warn?'warn':''}" data-k="${k}" onclick="toggleItem('${k}')">
       <span class="box">✓</span><span class="lbl">${warn?'<b>':''}${esc(it)}${warn?'</b>':''}</span>
     </div>`;
   };
@@ -734,19 +734,19 @@ function renderChecklist(c){
     <h2 class="pt">La tua checklist</h2>
     <p class="pd">Spunta l'attrezzatura man mano che la prepari. È personale, ma puoi vedere a che punto sono gli altri. La percentuale considera solo le voci obbligatorie.</p>
     <div class="ck-progress">
-      <div class="row"><span style="font-size:13px;color:var(--slate-light);font-weight:600">PRONTO AL</span><b>${pct}%</b></div>
+      <div class="row"><span style="font-size:13px;color:var(--slate-light);font-weight:600">PRONTO AL</span><b id="ckPct">${pct}%</b></div>
       <div class="pbar"><div class="pbar-fill" id="ckFill" style="width:0%"></div></div>
-      <div style="font-size:12px;color:var(--slate-light);margin-top:8px">${done} di ${req.length} obbligatori${optAll.length?` · ${optDone}/${optAll.length} facoltativi`:''}</div>
+      <div style="font-size:12px;color:var(--slate-light);margin-top:8px" id="ckCounts">${done} di ${req.length} obbligatori${optAll.length?` · ${optDone}/${optAll.length} facoltativi`:''}</div>
       <div class="others" id="ckOthers"></div>
     </div>
     <div id="catList">
       ${CHECKLIST.map((cat,ci)=>{
         const cReq=cat.req||[], cOpt=cat.opt||[];
         const catDone=cReq.filter(it=>mine[itemKey(it)]).length;
-        return `<div class="cat ${ci===0?'open':''}">
+        return `<div class="cat ${ci===0?'open':''}" data-ci="${ci}">
           <div class="cat-head" onclick="this.parentElement.classList.toggle('open')">
             <h3>${cat.ic} ${esc(cat.cat)}</h3>
-            <div style="display:flex;align-items:center;gap:10px"><span class="cnt">${catDone}/${cReq.length}</span><span class="arr">▼</span></div>
+            <div style="display:flex;align-items:center;gap:10px"><span class="cnt" data-cnt="${ci}">${catDone}/${cReq.length}</span><span class="arr">▼</span></div>
           </div>
           <div class="cat-items">
             ${cReq.map(it=>ckItem(it,cat.warn)).join('')}
@@ -785,7 +785,23 @@ window.toggleItem=function(k){
   if(mine[k])delete mine[k];else mine[k]=true;
   if(!STATE.checklist)STATE.checklist={};
   STATE.checklist[ME.id]=mine;
-  renderChecklist($('#pageContent'));
+  // update mirato: solo la casella cliccata, senza ridisegnare (le categorie restano aperte)
+  document.querySelectorAll(`.ck-item[data-k="${k}"]`).forEach(el=>el.classList.toggle('done',!!mine[k]));
+  // ricalcola contatori categoria + progresso
+  const req=reqItems();
+  CHECKLIST.forEach((cat,ci)=>{
+    const cReq=cat.req||[];
+    const d=cReq.filter(it=>mine[itemKey(it)]).length;
+    const cnt=document.querySelector(`.cnt[data-cnt="${ci}"]`);
+    if(cnt)cnt.textContent=`${d}/${cReq.length}`;
+  });
+  const done=req.filter(it=>mine[itemKey(it)]).length;
+  const pct=req.length?Math.round(done/req.length*100):0;
+  const optAll=optItems(), optDone=optAll.filter(it=>mine[itemKey(it)]).length;
+  const pctEl=$('#ckPct'), fillEl=$('#ckFill'), countsEl=$('#ckCounts');
+  if(pctEl)pctEl.textContent=pct+'%';
+  if(fillEl)fillEl.style.width=pct+'%';
+  if(countsEl)countsEl.textContent=`${done} di ${req.length} obbligatori${optAll.length?` · ${optDone}/${optAll.length} facoltativi`:''}`;
   clearTimeout(ckSaveTimer);
   ckSaveTimer=setTimeout(async()=>{
     try{await api('/api/data',{action:'setChecklist',token:TOKEN,nick:ME.nick,items:mine});}
