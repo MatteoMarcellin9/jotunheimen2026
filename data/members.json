@@ -5,72 +5,72 @@
    "nick": "Gigi",
    "name": "Luigi",
    "admin": false,
-   "salt": "e316e30735907539",
-   "hash": "d747d659a1bb5e9a8be98f17e61f0ff9668a81634a0488adae468f487222cd4d"
+   "salt": "3d2f59b559c921a8",
+   "hash": "a8d9fc3d6f2af9894d91a9c1247896d4cbe51d4fa2b9cf2ff4cce2a631630443"
   },
   {
    "id": "salva",
    "nick": "Salva",
    "name": "Enrico",
    "admin": false,
-   "salt": "8681dac8059e803e",
-   "hash": "f7844eae899af42294e05c25a1110ec0d4324d4a4b4e6cf958d5412168aef450"
+   "salt": "5820e4b3b9940cea",
+   "hash": "6ed7a5020ed4d2feec5c2d74569110903463725809b129c77e98f2bc5549c030"
   },
   {
    "id": "dalca",
    "nick": "Dalca",
    "name": "Mattia",
    "admin": false,
-   "salt": "fa0deddec53c6bb3",
-   "hash": "ccd9a9ad2d15bfb0533343b33088aa284294c47bf91ac9261bcf5b8a8da2cc18"
+   "salt": "2649ad3e9b4f4816",
+   "hash": "c99f071fd7c8b16e34acde2c1c5af95f9b5852e3470225f20c61d9013a524eeb"
   },
   {
    "id": "matteo",
    "nick": "Matte",
    "name": "Matteo",
    "admin": true,
-   "salt": "64f615d032af8dfd",
-   "hash": "2426f5c890d9c861ab4ec852adbe5183d84686a2c513c6a11fe85a5512a1dbcb"
+   "salt": "ea2a156735959d69",
+   "hash": "7598cc82e01603681cf7a7fa3379c8492a3373caf19b02156e6fb1c5ddc84c17"
   },
   {
    "id": "seba",
    "nick": "Seba",
    "name": "Sebastiano",
    "admin": false,
-   "salt": "ef0c0bb1045b0f09",
-   "hash": "1685a23aa32e31ad90bf936dbc40aaab475e34a39d3b76ea98de762feb4d5b69"
+   "salt": "9ad776334e28f259",
+   "hash": "6cf43e68dd39e7e1e06f21f7cbc537b11b3a9faf8706f51ae1e798b09df34002"
   },
   {
    "id": "semma",
    "nick": "Semma",
    "name": "Emma",
    "admin": false,
-   "salt": "28a3f50c76a7e7ac",
-   "hash": "ca428caaefa7ff70d65f817d364f8f5fb033b48600f5dc17627c7919f35188da"
+   "salt": "16602bda65b98019",
+   "hash": "893e1e6ee0208359baa7b10df281c2fff90a772b6bd77fbe4a37b270013a1efe"
   },
   {
    "id": "dade",
    "nick": "Dade",
    "name": "Davide",
    "admin": false,
-   "salt": "f8b82795c233a6bc",
-   "hash": "411d7a12d88983a57c14884ccb36594bf0fde92cb85cd28cbab8f625267d065a"
+   "salt": "045a5f79be3842da",
+   "hash": "6085fb3530e210dbd009cb561c72b921171010c4ad912b4ae1fcfaa328dfb96f"
   },
   {
    "id": "zayn",
    "nick": "Zayn",
    "name": "Luca",
    "admin": false,
-   "salt": "a19b46ccd7cec496",
-   "hash": "cc0aab8314165838b41a5f16343adba0313834da2f6fd8b03ad54f0101933a66"
+   "salt": "f1f37181fa698ae9",
+   "hash": "ca666a9e6ddaa86478c3d811acd02103f3b501b41451e2740a5e5ec84d7fefd4"
   },
   {
    "id": "bianc",
    "nick": "Bianc",
    "name": "Luca",
    "admin": false,
-   "salt": "f8f31009d9025352",
-   "hash": "c0ebac9821cab930d11ac92d8c71a0d443b1ad54e3672e8534b609f4551ffd49"
+   "salt": "258328594af57ad5",
+   "hash": "6e18c3b8ff69c8e0a5f623afbcda11500ebc97e46c4dfb6108e655e90730530b"
   }
  ]
 }
