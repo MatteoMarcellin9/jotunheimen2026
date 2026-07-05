@@ -3,9 +3,17 @@
   {
    "id": "d09_spesa",
    "date": "9 ago",
-   "label": "Spesa a Oslo \u2014 cibo e bombolette gas",
+   "label": "Spesa a Oslo — cibo e bombolette gas",
    "type": "spesa",
-   "posts": []
+   "posts": [
+    {
+     "id": "mr80jfih59f568",
+     "member": "matteo",
+     "nick": "Matte",
+     "text": "Bombolette",
+     "ts": 1783269369058
+    }
+   ]
   },
   {
    "id": "d09_cena",
@@ -24,7 +32,7 @@
   {
    "id": "d10_cena",
    "date": "10 ago",
-   "label": "Cena a fornelletto \u2014 Memurubu",
+   "label": "Cena a fornelletto — Memurubu",
    "type": "fornelletto",
    "posts": []
   },
@@ -45,7 +53,7 @@
   {
    "id": "d11_cena",
    "date": "11 ago",
-   "label": "Cena a fornelletto \u2014 bivacco altopiano",
+   "label": "Cena a fornelletto — bivacco altopiano",
    "type": "fornelletto",
    "posts": []
   },
@@ -80,7 +88,7 @@
   {
    "id": "d13_pranzo",
    "date": "13 ago",
-   "label": "Pranzo al sacco \u2014 escursione",
+   "label": "Pranzo al sacco — escursione",
    "type": "sacco",
    "posts": []
   },
