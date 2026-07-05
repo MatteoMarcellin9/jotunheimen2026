@@ -6,20 +6,20 @@
 <meta name="theme-color" content="#0c4a6e">
 <title>Area Gruppo — Jotunheimen 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root{
-  --navy:#0c4a6e; --blue:#1e40af; --sky:#0ea5e9; --sky-light:#e0f2fe;
-  --slate:#334155; --slate-light:#64748b; --red:#dc2626; --green:#10b981; --amber:#f59e0b;
-  --bg:#f8fafc; --card:#fff; --border:#e2e8f0;
-  --shadow:0 4px 24px rgba(12,74,110,.08); --shadow-lg:0 12px 48px rgba(12,74,110,.16);
+  --navy:#1e4d6b; --blue:#3a6ea5; --sky:#4a90c2; --sky-light:#eaf4fb;
+  --slate:#4a5568; --slate-light:#8a95a5; --red:#d97878; --green:#5a9e7a; --amber:#d4a24e;
+  --bg:#fbfcfd; --card:#fff; --border:#edf1f5;
+  --shadow:0 2px 16px rgba(30,77,107,.05); --shadow-lg:0 8px 32px rgba(30,77,107,.09);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',system-ui,sans-serif;color:var(--slate);background:var(--bg);overflow-x:hidden}
-h1,h2,h3,h4{font-family:'Outfit',sans-serif;color:var(--navy)}
+h1,h2,h3,h4{font-family:'Outfit',sans-serif;color:var(--navy);font-weight:500}
 button{font-family:inherit;cursor:pointer;border:none}
 input,textarea,select{font-family:inherit;font-size:15px}
 .hidden{display:none!important}
@@ -34,20 +34,20 @@ input,textarea,select{font-family:inherit;font-size:15px}
 #viewLogin::before{content:'';position:fixed;inset:0;background:url('/assets/hero_tenda.jpg') center/cover;z-index:-1}
 .login-card{background:rgba(255,255,255,.82);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.9);border-radius:26px;box-shadow:var(--shadow-lg);padding:34px 30px;max-width:520px;width:100%}
 .login-card .kick{font-family:'Outfit';font-weight:600;letter-spacing:.35em;text-transform:uppercase;font-size:11px;color:var(--sky);text-align:center}
-.login-card h1{font-size:30px;font-weight:800;text-align:center;margin:8px 0 4px}
+.login-card h1{font-size:30px;font-weight:600;text-align:center;margin:8px 0 4px}
 .login-card .sub{text-align:center;color:var(--slate-light);font-size:13.5px;margin-bottom:24px}
 .member-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .mcard{background:#fff;border:2px solid var(--border);border-radius:16px;padding:14px 6px;text-align:center;transition:.2s}
 .mcard:hover{border-color:var(--sky);transform:translateY(-2px)}
 .mcard.sel{border-color:var(--navy);background:var(--sky-light)}
-.mcard .avatar{width:44px;height:44px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-family:'Outfit';font-weight:700;color:#fff;font-size:17px}
+.mcard .avatar{width:44px;height:44px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-family:'Outfit';font-weight:500;color:#fff;font-size:17px}
 .mcard b{font-family:'Outfit';color:var(--navy);font-size:14px;display:block}
 .mcard small{color:var(--slate-light);font-size:10px}
 .code-row{margin-top:22px}
 .code-row label{font-size:12px;font-weight:600;color:var(--slate-light);text-transform:uppercase;letter-spacing:.06em}
-.code-input{width:100%;margin-top:8px;padding:14px 16px;border:2px solid var(--border);border-radius:14px;font-family:'Outfit';font-weight:700;font-size:20px;letter-spacing:.18em;text-align:center;text-transform:uppercase;color:var(--navy);outline:none;transition:.2s}
+.code-input{width:100%;margin-top:8px;padding:14px 16px;border:2px solid var(--border);border-radius:14px;font-family:'Outfit';font-weight:500;font-size:20px;letter-spacing:.18em;text-align:center;text-transform:uppercase;color:var(--navy);outline:none;transition:.2s}
 .code-input:focus{border-color:var(--sky)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-family:'Outfit';font-weight:700;font-size:16px;padding:15px 30px;border-radius:999px;box-shadow:var(--shadow);transition:.25s;width:100%}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-family:'Outfit';font-weight:500;font-size:16px;padding:15px 30px;border-radius:999px;box-shadow:var(--shadow);transition:.25s;width:100%}
 .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
 .btn:disabled{opacity:.45;transform:none;cursor:not-allowed}
 .btn.sm{width:auto;padding:9px 18px;font-size:13.5px}
@@ -61,8 +61,8 @@ input,textarea,select{font-family:inherit;font-size:15px}
 .ob-track{position:absolute;inset:0;display:flex;transition:transform .65s cubic-bezier(.25,.8,.25,1);will-change:transform}
 .ob-slide{width:100vw;height:100%;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:22px 20px 120px}
 .ob-card{background:rgba(255,255,255,.86);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.95);border-radius:26px;box-shadow:var(--shadow-lg);padding:30px 28px;max-width:560px;width:100%;max-height:calc(100svh - 170px);overflow-y:auto}
-.ob-date{font-family:'Outfit';font-weight:800;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--sky)}
-.ob-card h2{font-size:clamp(24px,5.6vw,34px);font-weight:800;margin:6px 0 12px;line-height:1.08}
+.ob-date{font-family:'Outfit';font-weight:600;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--sky)}
+.ob-card h2{font-size:clamp(24px,5.6vw,34px);font-weight:600;margin:6px 0 12px;line-height:1.08}
 .ob-card p{font-size:14.5px;line-height:1.62;color:var(--slate)}
 .badges{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
 .badge{background:var(--sky-light);color:var(--navy);font-size:11.5px;font-weight:600;padding:5px 12px;border-radius:999px}
@@ -84,11 +84,11 @@ input,textarea,select{font-family:inherit;font-size:15px}
 /* ===== APP SHELL ===== */
 #viewApp{min-height:100svh;padding-bottom:84px}
 .topbar{position:sticky;top:0;z-index:500;background:rgba(255,255,255,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:12px clamp(16px,4vw,40px);display:flex;align-items:center;justify-content:space-between}
-.topbar .brand{font-family:'Outfit';font-weight:800;color:var(--navy);font-size:17px;display:flex;align-items:center;gap:9px}
+.topbar .brand{font-family:'Outfit';font-weight:600;color:var(--navy);font-size:17px;display:flex;align-items:center;gap:9px}
 .topbar .brand .nb{display:inline-flex;height:4px;width:34px;border-radius:2px;overflow:hidden}
 .topbar .brand .nb i{flex:1}.topbar .brand .nb i:nth-child(1){background:var(--red)}.topbar .brand .nb i:nth-child(2){background:#fff;box-shadow:inset 0 0 0 1px #ddd}.topbar .brand .nb i:nth-child(3){background:var(--blue)}
 .topbar .user{display:flex;align-items:center;gap:10px;font-size:13px}
-.topbar .avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Outfit';font-weight:700;color:#fff;font-size:13px}
+.topbar .avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Outfit';font-weight:500;color:#fff;font-size:13px}
 .logout{background:none;color:var(--slate-light);font-size:12px;text-decoration:underline}
 .tabs{position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 4px calc(10px + env(safe-area-inset-bottom))}
 .tab{background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;color:var(--slate-light);padding:5px 10px;border-radius:12px;transition:.2s;min-width:56px}
@@ -101,18 +101,18 @@ input,textarea,select{font-family:inherit;font-size:15px}
 }
 .page{max-width:1080px;margin:0 auto;padding:clamp(18px,4vw,36px) clamp(14px,4vw,32px);position:relative}
 .page-bg{position:fixed;inset:0;background-size:cover;background-position:center;opacity:.42;z-index:-1;transition:opacity .5s}
-.page h2.pt{font-size:clamp(24px,5vw,34px);font-weight:800;margin-bottom:4px}
+.page h2.pt{font-size:clamp(24px,5vw,34px);font-weight:600;margin-bottom:4px}
 .page .pd{color:var(--slate-light);font-size:14px;margin-bottom:24px}
 
 /* ===== PROGRAMMA ===== */
 .day-card{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden;display:flex;flex-direction:column}
 .day-head{display:flex;align-items:center;gap:14px;padding:16px 20px;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff}
-.day-num{font-family:'Outfit';font-weight:800;font-size:24px;background:rgba(255,255,255,.16);border-radius:12px;padding:6px 13px;line-height:1}
+.day-num{font-family:'Outfit';font-weight:600;font-size:24px;background:rgba(255,255,255,.16);border-radius:12px;padding:6px 13px;line-height:1}
 .day-num small{display:block;font-size:9px;font-weight:600;letter-spacing:.1em;opacity:.85}
 .day-head h3{color:#fff;font-size:17px;line-height:1.2}
 .day-head .sub{font-size:11.5px;color:#bae6fd;margin-top:2px}
 .day-body{padding:16px 20px;font-size:14px;line-height:1.6}
-.day-body .stat{display:inline-flex;gap:4px;background:var(--sky-light);color:var(--navy);font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:999px;margin:0 5px 6px 0}
+.day-body .stat{display:inline-flex;gap:4px;background:var(--sky-light);color:var(--navy);font-size:11.5px;font-weight:500;padding:4px 11px;border-radius:999px;margin:0 5px 6px 0}
 .elev-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:18px;margin-bottom:22px}
 .elev-wrap img{width:100%;border-radius:10px}
 
@@ -124,10 +124,10 @@ input,textarea,select{font-family:inherit;font-size:15px}
 .copt.mine{border-color:var(--navy);background:var(--sky-light)}
 .copt-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .copt-top b{font-size:13.5px;color:var(--navy)}
-.copt-count{font-family:'Outfit';font-weight:800;color:var(--sky);font-size:15px;white-space:nowrap}
+.copt-count{font-family:'Outfit';font-weight:600;color:var(--sky);font-size:15px;white-space:nowrap}
 .copt-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
 .mini-chip{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--border);border-radius:999px;padding:2px 9px 2px 3px;font-size:11px;font-weight:600;color:var(--slate)}
-.mini-chip .avatar{width:18px;height:18px;font-size:9px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit';font-weight:700}
+.mini-chip .avatar{width:18px;height:18px;font-size:9px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit';font-weight:500}
 .copt .pick{margin-top:9px;background:none;color:var(--sky);font-weight:600;font-size:12.5px;text-decoration:underline}
 .missing-note{font-size:12px;color:var(--amber);font-weight:600;margin-top:6px}
 
@@ -139,11 +139,11 @@ input,textarea,select{font-family:inherit;font-size:15px}
 .pbar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--sky),var(--green));width:0%;transition:width .7s cubic-bezier(.2,.8,.2,1)}
 .others{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .other-p{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--slate-light);background:#fff;border:1px solid var(--border);border-radius:999px;padding:3px 10px 3px 4px}
-.other-p .avatar{width:20px;height:20px;font-size:9px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit';font-weight:700}
+.other-p .avatar{width:20px;height:20px;font-size:9px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit';font-weight:500}
 .cat{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
 .cat-head{display:flex;justify-content:space-between;align-items:center;padding:15px 18px;cursor:pointer;user-select:none}
 .cat-head h3{font-size:15px;display:flex;align-items:center;gap:9px}
-.cat-head .cnt{font-size:12px;font-weight:700;color:var(--sky)}
+.cat-head .cnt{font-size:12px;font-weight:500;color:var(--sky)}
 .cat-head .arr{transition:.3s;color:var(--slate-light)}
 .cat.open .arr{transform:rotate(180deg)}
 .cat-items{display:none;padding:2px 12px 12px}
@@ -156,12 +156,12 @@ input,textarea,select{font-family:inherit;font-size:15px}
 .ck-item .lbl{font-size:13.5px;flex:1}
 .ck-item.warn{background:#fffbeb;border:1px solid #fde68a}
 .ck-item.warn .lbl b{color:#b45309}
-.opt-divider{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--slate-light);padding:12px 8px 5px;border-top:1px dashed var(--border);margin-top:6px}
+.opt-divider{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--slate-light);padding:12px 8px 5px;border-top:1px dashed var(--border);margin-top:6px}
 .zaino-guide{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:1px solid #bae6fd;border-radius:18px;padding:18px 20px;margin-top:18px;font-size:13px;line-height:1.7}
 .zaino-guide h3{margin-bottom:8px;font-size:15px}
 
 /* ===== PASTI ===== */
-.meal-date{font-family:'Outfit';font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--sky);margin:22px 0 10px}
+.meal-date{font-family:'Outfit';font-weight:600;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--sky);margin:22px 0 10px}
 .slot{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
 .slot-head{display:flex;align-items:center;gap:10px;padding:13px 17px;border-bottom:1px solid var(--border)}
 .slot-type{font-size:18px}
@@ -170,9 +170,9 @@ input,textarea,select{font-family:inherit;font-size:15px}
 .posts{padding:8px 15px}
 .post{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--border)}
 .post:last-child{border-bottom:none}
-.post .avatar{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit';font-weight:700;font-size:12px}
+.post .avatar{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit';font-weight:500;font-size:12px}
 .post .body{flex:1}
-.post .who{font-size:11.5px;font-weight:700;color:var(--navy)}
+.post .who{font-size:11.5px;font-weight:500;color:var(--navy)}
 .post .when{font-size:10px;color:var(--slate-light);font-weight:400;margin-left:6px}
 .post .txt{font-size:13.5px;margin-top:2px;white-space:pre-wrap}
 .post .del{background:none;color:var(--slate-light);font-size:15px;padding:0 4px;opacity:.5}
@@ -180,13 +180,13 @@ input,textarea,select{font-family:inherit;font-size:15px}
 .add-post{display:flex;gap:8px;padding:11px 15px;background:var(--bg);border-top:1px solid var(--border)}
 .add-post input{flex:1;border:1.5px solid var(--border);border-radius:11px;padding:9px 13px;outline:none;font-size:13.5px}
 .add-post input:focus{border-color:var(--sky)}
-.add-post button{background:var(--navy);color:#fff;border-radius:11px;padding:0 16px;font-weight:700;font-size:13px}
+.add-post button{background:var(--navy);color:#fff;border-radius:11px;padding:0 16px;font-weight:500;font-size:13px}
 .no-posts{font-size:12.5px;color:var(--slate-light);font-style:italic;padding:6px 0}
 
 /* ===== MAPPA ===== */
 #gmap{height:clamp(340px,52vh,560px);border-radius:20px;box-shadow:var(--shadow-lg);border:1px solid var(--border);z-index:1}
 .map-fabs{display:flex;gap:9px;margin-top:13px;flex-wrap:wrap}
-.fab{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:2px solid var(--border);border-radius:999px;padding:10px 17px;font-weight:700;font-size:13px;color:var(--navy);box-shadow:var(--shadow);transition:.2s}
+.fab{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:2px solid var(--border);border-radius:999px;padding:10px 17px;font-weight:500;font-size:13px;color:var(--navy);box-shadow:var(--shadow);transition:.2s}
 .fab:hover{border-color:var(--sky);transform:translateY(-2px)}
 .fab.on{background:var(--navy);color:#fff;border-color:var(--navy)}
 .chart-wrap{position:relative;height:170px;background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:12px;margin-top:14px}
@@ -214,13 +214,42 @@ input,textarea,select{font-family:inherit;font-size:15px}
 
 /* ===== ADMIN ===== */
 .admin-row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:15px;padding:12px 15px;margin-bottom:9px;box-shadow:var(--shadow)}
-.admin-row .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit';font-weight:700}
+.admin-row .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit';font-weight:500}
 .admin-row .info{flex:1}
 .admin-row b{font-family:'Outfit';color:var(--navy);font-size:14px}
 .admin-row small{display:block;color:var(--slate-light);font-size:11px}
 .new-code{background:#f0fdf4;border:2px solid #bbf7d0;border-radius:15px;padding:15px;margin:12px 0;text-align:center}
-.new-code .code{font-family:'Outfit';font-weight:800;font-size:26px;letter-spacing:.14em;color:#15803d}
+.new-code .code{font-family:'Outfit';font-weight:600;font-size:26px;letter-spacing:.14em;color:#15803d}
 .new-code small{display:block;color:var(--slate-light);font-size:11.5px;margin-top:5px}
+
+/* ===== HOME (hub) ===== */
+.home{max-width:900px;margin:0 auto}
+.home-hero{position:relative;border-radius:26px;overflow:hidden;box-shadow:var(--shadow-lg);margin-bottom:22px;background:var(--sky-light)}
+#homeMap{height:clamp(300px,44vh,420px);width:100%;filter:saturate(.72) brightness(1.06)}
+.home-hero-inner{position:absolute;inset:0;z-index:400;display:flex;flex-direction:column;justify-content:flex-end;padding:26px 28px;pointer-events:none}
+.home-hero-fade{position:absolute;inset:0;z-index:390;background:linear-gradient(180deg,rgba(251,252,253,.05) 0%,rgba(251,252,253,0) 45%,rgba(30,77,107,.32) 100%);pointer-events:none}
+.home-eyebrow{font-family:'Outfit';font-weight:400;letter-spacing:.24em;text-transform:uppercase;font-size:11px;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.4);margin-bottom:6px}
+.home-count{color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+.hc-num{font-family:'Outfit';font-weight:600;font-size:clamp(36px,9vw,58px);line-height:1}
+.hc-lbl{font-family:'Outfit';font-weight:300;font-size:clamp(14px,3vw,18px);opacity:.95}
+.home-branches{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:13px}
+.branch{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px 20px;display:flex;align-items:center;gap:15px;text-align:left;box-shadow:var(--shadow);transition:.28s cubic-bezier(.2,.8,.2,1);opacity:0;transform:translateY(16px);animation:branchIn .6s forwards}
+@keyframes branchIn{to{opacity:1;transform:none}}
+.branch:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--sky)}
+.branch-ic{font-size:26px;width:52px;height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(140deg,var(--sky-light),#fff);border-radius:15px;box-shadow:inset 0 0 0 1px var(--border)}
+.branch-txt{flex:1;display:flex;flex-direction:column;gap:2px}
+.branch-t{font-family:'Outfit';font-weight:500;color:var(--navy);font-size:16px}
+.branch-d{font-size:12px;color:var(--slate-light)}
+.branch-arr{color:var(--sky);font-size:18px;opacity:.5;transition:.28s}
+.branch:hover .branch-arr{opacity:1;transform:translateX(3px)}
+
+/* ===== TO DO ===== */
+.td-item .lbl{display:flex;flex-direction:column;gap:1px}
+.td-who{font-size:10.5px;color:var(--green);font-weight:500}
+.td-item.done .td-who{color:var(--slate-light)}
+
+/* mappa schiarita (tab Mappa) */
+.map-tiles-light{filter:saturate(.75) brightness(1.05)}
 
 /* leaflet custom */
 .leaflet-popup-content-wrapper{border-radius:14px;font-family:'Inter'}
@@ -344,7 +373,7 @@ function avColor(id){return AVCOLORS[id]||'#64748b'}
 
 // Immagini di sfondo per pagina (ciclo parallax onboarding)
 const OB_BACKGROUNDS=['/assets/hero_fiordo.jpg','/assets/hero_bergen_color.jpg','/assets/hero_aurora.jpg','/assets/hero_fiordo.jpg','/assets/hero_bergen_day.jpg','/assets/hero_panorama.jpg','/assets/hero_bergen_snow.jpg'];
-const PAGE_BG={programma:'/assets/bg_fiordo.jpg',scelte:'/assets/bg_panorama.jpg',checklist:'/assets/bg_tenda.jpg',pasti:'/assets/bg_orso.jpg',mappa:'/assets/bg_bergen_color.jpg',admin:'/assets/bg_bandiera.jpg'};
+const PAGE_BG={programma:'/assets/bg_fiordo.jpg',scelte:'/assets/bg_panorama.jpg',checklist:'/assets/bg_tenda.jpg',todo:'/assets/bg_bergen_snow.jpg',pasti:'/assets/bg_orso.jpg',mappa:'/assets/bg_bergen_color.jpg',admin:'/assets/bg_bandiera.jpg'};
 
 // PROGRAMMA giorno per giorno
 const DAYS=[
@@ -352,8 +381,8 @@ const DAYS=[
   {n:2,date:'DOM 9 AGO',title:'Spesa e trasferimento a Gjendesheim',sub:'In cammino verso il Jotunheimen',body:'Al mattino: spesa del cibo fresco e delle bombolette per il gas (le bombolette NON si possono portare in aereo, si comprano qui). Bus per Gjendesheim: partenza 08:30, arrivo 13:30. Arrivo al rifugio nel pomeriggio, cena, sauna e notte a Gjendesheim.',stats:['🚌 Bus 08:30→13:30','🛒 Spesa + gas','🧖 Sauna','🛏 Rifugio DNT'],night:'Rifugio Gjendesheim'},
   {n:3,date:'LUN 10 AGO',title:'Gjendesheim → Memurubu',sub:'via Besseggen · la tappa regina',body:'Colazione presto e pranzo al sacco preparato dal rifugio. Traversata del crinale di Besseggen (fino a 1732 m), il tratto più spettacolare. Discesa a Memurubu, sul lago Gjende. Notte in tenda, con servizi DNT a pagamento per bagno e docce.',stats:['📏 13,5 km','⛰ +1054 / −1016 m','🏔 max 1732 m','⛺ Tenda'],night:'Tenda a Memurubu'},
   {n:4,date:'MAR 11 AGO',title:'Memurubu → Altopiano',sub:'nel cuore del parco',body:'Colazione a fornelletto in tenda. Si risale verso l\'altopiano centrale, quota ondulata 1200-1500 m senza difficoltà tecniche. Pranzo al sacco lungo il cammino. Si arriva al punto a metà strada verso Leirvassbu e si monta il campo. Nulla da prenotare, bivacco libero.',stats:['📏 15,2 km','⛰ +776 / −542 m','⛺ Tenda libera'],night:'Tenda in quota (~1276 m)'},
-  {n:5,date:'MER 12 AGO',title:'Altopiano → Leirvassbu',sub:'arrivo al base camp',body:'Colazione a fornelletto e smontaggio tende. Tappa breve e in salita dolce fino a Leirvassbu (1402 m), ai piedi del Galdhøpiggen. Da decidere insieme: dormire al rifugio o in tenda. Cena al rifugio o a fornelletto secondo la scelta.',stats:['📏 12,8 km','⛰ +279 / −153 m','🏕 Base camp'],night:'Leirvassbu (rifugio o tenda)'},
-  {n:6,date:'GIO 13 AGO',title:'Giornata a Leirvassbu + bus notturno',sub:'escursione e rientro',body:'Giornata di escursione dal base camp, potenzialmente lasciando le tende piantate con dentro il superfluo. Un giro in un posto bello, tutti insieme. Rientro entro le 20:00 per prendere il bus notturno delle 20 che riporta a Oslo in nottata.',stats:['🥾 Escursione','🎒 Tende lasciate','🚌 Bus ore 20:00'],night:'Bus notturno → Oslo'},
+  {n:5,date:'MER 12 AGO',title:'Altopiano → Leirvassbu',sub:'arrivo al base camp',body:'Colazione a fornelletto e smontaggio tende. Tappa breve e in salita dolce fino a Leirvassbu (1402 m), ai piedi del Galdhøpiggen. Qui si passa la notte: da decidere insieme se in rifugio o in tenda. Cena al rifugio o a fornelletto secondo la scelta.',stats:['📏 12,8 km','⛰ +279 / −153 m','🏕 Base camp'],night:'Leirvassbu (rifugio o tenda)'},
+  {n:6,date:'GIO 13 AGO',title:'Giornata a Leirvassbu + bus per Oslo',sub:'escursione e rientro',body:'Giornata di escursione dal base camp, lasciando le tende piantate con dentro il superfluo. Un giro in un posto bello, tutti insieme. Rientro entro le 20:00 per prendere il bus delle 20 che riporta a Oslo in nottata.',stats:['🥾 Escursione','🎒 Tende lasciate','🚌 Bus ore 20:00'],night:'Bus notturno → Oslo'},
   {n:7,date:'VEN 14 AGO',title:'Ritorno a Oslo',sub:'città e riposo',body:'Arrivo a Oslo la mattina presto con gli zaini grandi. Giornata in un parco in attesa del check-in in ostello/B&B (prenotato per le notti del 14 e 15). Alla sera, cena fuori e festa moderata.',stats:['🌆 Oslo','🏞 Parco','🍽 Cena + festa'],night:'Ostello / B&B a Oslo'},
   {n:8,date:'SAB 15 AGO',title:'Oslo — Munch e città',sub:'cultura',body:'Visita al Museo Munch per vedere L\'Urlo (biglietto da prenotare). Resto della giornata da decidere insieme, tra quartieri, fiordo e locali della città.',stats:['🖼 Munch · L\'Urlo','🚶 Città'],night:'Ostello / B&B a Oslo'},
   {n:9,date:'DOM 16 AGO',title:'Rientro',sub:'ultima mattina',body:'Ultima mattinata a Oslo, poi volo di rientro. Fine del viaggio.',stats:['✈ Volo di ritorno'],night:'—'}
@@ -363,8 +392,7 @@ const DAYS=[
 const CHOICES=[
   {id:'sauna9',day:'DOM 9 AGO',q:'Sauna a Gjendesheim la sera dell\'arrivo?',d:'Costa ~200 NOK/ora, va prenotata in anticipo. Chi la farebbe?',opts:[['si','Sì, ci sto'],['no','No, passo'],['forse','Dipende dall\'orario di arrivo']]},
   {id:'leir12',day:'MER 12 AGO',q:'A Leirvassbu: rifugio o tenda?',d:'Il rifugio (da ~100€/notte) offre letto e cena calda; la tenda è gratis ma con servizi a pagamento. In entrambi i casi va chiamato per prenotare.',opts:[['rifugio','Rifugio — letto e cena'],['tenda','Tenda — spendo meno'],['indeciso','Ancora indeciso']]},
-  {id:'esc13',day:'GIO 13 AGO',q:'Che tipo di escursione il 13?',d:'Giornata libera dal base camp prima del bus serale. Verso cosa puntiamo?',opts:[['vetta','Una vetta impegnativa (Galdhøpiggen/Glittertind)'],['laghi','Giro tranquillo tra laghi e ghiacciai'],['relax','Mezza giornata soft, poi relax']]},
-  {id:'formula',day:'DA DECIDERE',q:'Dopo Leirvassbu, quale formula?',d:'La struttura del viaggio dipende da questa scelta di gruppo. Cosa preferisci?',opts:[['citta','Rientro a Oslo e giorni in città'],['basecamp','Più giorni a Leirvassbu'],['traversata','Traversata completa fino a Gjendebu']]},
+  {id:'esc13',day:'GIO 13 AGO',q:'Che tipo di escursione il 13?',d:'Giornata di escursione dal base camp prima del bus serale. Verso cosa puntiamo?',opts:[['vetta','Una vetta impegnativa (Galdhøpiggen/Glittertind)'],['laghi','Giro tranquillo tra laghi e ghiacciai'],['relax','Mezza giornata soft, poi relax']]},
   {id:'oslo15',day:'SAB 15 AGO',q:'Oltre a Munch, cosa a Oslo il 15?',d:'Idee per il pomeriggio in città dopo il museo.',opts:[['fiordo','Giro in barca sul fiordo'],['quartieri','Quartieri e street food (Grünerløkka)'],['vigeland','Parco Vigeland e relax'],['shopping','Shopping e giro libero']]}
 ];
 
@@ -402,16 +430,46 @@ const CHECKLIST=[
 // WAYPOINT per la mappa (allineati a track.json)
 let TRACK=null;
 
+// TO DO — cose da fare/prenotare prima di partire (checklist condivisa del gruppo)
+const TODO=[
+  {cat:'Prenotazioni alloggi',ic:'🏨',items:[
+    'Hotel notte 8 ago vicino aeroporto Oslo (gruppo 9)',
+    'Ostello / B&B a Oslo per notti 14 e 15 ago',
+    'Leirvassbu — chiamare per notte del 12 (rifugio o posti tenda)'
+  ]},
+  {cat:'Trasporti',ic:'🚌',items:[
+    'Bus Oslo → Gjendesheim del 9 ago (corsa 08:30) su entur.no',
+    'Bus da Leirvassbu delle 20:00 del 13 ago',
+    'Verificare orari estivi 2026 (corse stagionali) ~60 gg prima',
+    'Check-in online voli andata e ritorno'
+  ]},
+  {cat:'Attività',ic:'🎟',items:[
+    'Sauna a Gjendesheim la sera del 9 ago',
+    'Museo Munch (L\'Urlo) per il 15 ago'
+  ]},
+  {cat:'Montagna',ic:'⛰',items:[
+    'Posti tenda a Memurubu per la notte del 10 ago',
+    'Contattare DNT per info tappe e servizi',
+    'Controllare meteo nei giorni prima della partenza'
+  ]},
+  {cat:'Pasti',ic:'🍲',items:[
+    'Pianificare la spesa a Oslo (cibo + bombolette gas)',
+    'Definire il menu delle cene a fornelletto',
+    'Dividere il cibo e l\'attrezzatura comune nel gruppo'
+  ]}
+];
+
 // ============================================================
 //  STATO GLOBALE + API
 // ============================================================
-let ME=null, TOKEN=null, STATE=null, CURRENT_TAB='programma';
+let ME=null, TOKEN=null, STATE=null, CURRENT_TAB='home';
 const $=s=>document.querySelector(s);
 const $$=s=>document.querySelectorAll(s);
 
 function toast(msg,isErr){const t=$('#toast');t.textContent=msg;t.className='show'+(isErr?' err':'');setTimeout(()=>t.className='',2800);}
 function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
 function fmtDate(ts){return new Date(ts).toLocaleString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}
+function daysUntil(){const dep=new Date('2026-08-08T21:00:00+02:00');return Math.ceil((dep-new Date())/86400000);}
 function av(id,nick,size){const s=size||30;return `<span class="avatar" style="width:${s}px;height:${s}px;font-size:${s*0.42}px;background:${avColor(id)}">${(nick||'?')[0]}</span>`}
 
 async function api(path,body){
@@ -613,9 +671,11 @@ window.finishOnboarding=async function(){
 //  APP SHELL + TABS
 // ============================================================
 const TABS=[
+  {id:'home',ic:'✦',label:'Home'},
   {id:'programma',ic:'📅',label:'Programma'},
   {id:'scelte',ic:'🗳',label:'Scelte'},
   {id:'checklist',ic:'✅',label:'Checklist'},
+  {id:'todo',ic:'📌',label:'To Do'},
   {id:'pasti',ic:'🍲',label:'Pasti'},
   {id:'mappa',ic:'🗺',label:'Mappa'}
 ];
@@ -631,15 +691,136 @@ function showApp(){
 window.switchTab=function(id){
   CURRENT_TAB=id;
   $$('.tab').forEach(t=>t.classList.toggle('on',t.dataset.tab===id));
-  $('#pageBg').style.backgroundImage=`url('${PAGE_BG[id]||PAGE_BG.programma}')`;
+  const pb=$('#pageBg');
+  if(id==='home'){pb.style.opacity='0';}else{pb.style.opacity='';pb.style.backgroundImage=`url('${PAGE_BG[id]||PAGE_BG.programma}')`;}
   window.scrollTo(0,0);
   const c=$('#pageContent');
-  if(id==='programma')renderProgramma(c);
+  if(id==='home')renderHome(c);
+  else if(id==='programma')renderProgramma(c);
   else if(id==='scelte')renderScelte(c);
   else if(id==='checklist')renderChecklist(c);
+  else if(id==='todo')renderTodo(c);
   else if(id==='pasti')renderPasti(c);
   else if(id==='mappa')renderMappa(c);
   else if(id==='admin')renderAdmin(c);
+};
+
+// ============================================================
+//  TAB: HOME (hub con mappa + branch verso i tab)
+// ============================================================
+const HOME_BRANCHES=[
+  {id:'programma',ic:'📅',title:'Programma',desc:'I 9 giorni, tappa per tappa'},
+  {id:'scelte',ic:'🗳',title:'Scelte',desc:'Le decisioni del gruppo'},
+  {id:'checklist',ic:'✅',title:'Checklist',desc:'La tua attrezzatura'},
+  {id:'todo',ic:'📌',title:'To Do',desc:'Cosa prenotare e organizzare'},
+  {id:'pasti',ic:'🍲',title:'Pasti',desc:'Cosa si mangia e chi porta'},
+  {id:'mappa',ic:'🗺',title:'Mappa',desc:'Percorso, foto e commenti'}
+];
+async function renderHome(c){
+  const days=daysUntil();
+  c.innerHTML=`
+    <div class="home">
+      <div class="home-hero">
+        <div class="home-hero-inner">
+          <div class="home-eyebrow">Jotunheimen · 8–16 agosto 2026</div>
+          <div class="home-count">${days>0?`<span class="hc-num">${days}</span> <span class="hc-lbl">giorni alla partenza</span>`:days===0?'<span class="hc-lbl">Si parte oggi ✦</span>':'<span class="hc-lbl">In viaggio ✦</span>'}</div>
+        </div>
+        <div id="homeMap"></div>
+        <div class="home-hero-fade"></div>
+      </div>
+      <div class="home-branches">
+        ${HOME_BRANCHES.map((b,i)=>`
+          <button class="branch" style="animation-delay:${i*70}ms" onclick="switchTab('${b.id}')">
+            <span class="branch-ic">${b.ic}</span>
+            <span class="branch-txt"><span class="branch-t">${b.title}</span><span class="branch-d">${b.desc}</span></span>
+            <span class="branch-arr">→</span>
+          </button>`).join('')}
+      </div>
+    </div>
+  `;
+  if(!TRACK){TRACK=await(await fetch('/assets/track.json')).json();}
+  setTimeout(()=>initHomeMap(),60);
+}
+let homeMap=null;
+function initHomeMap(){
+  if(!$('#homeMap'))return;
+  homeMap=L.map('homeMap',{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false});
+  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:16,className:'map-tiles-light'}).addTo(homeMap);
+  TRACK.stages.forEach(st=>{
+    const seg=TRACK.points.filter(p=>p[3]>=st.from&&p[3]<=st.to).map(p=>[p[0],p[1]]);
+    L.polyline(seg,{color:'#fff',weight:6,opacity:.85}).addTo(homeMap);
+    L.polyline(seg,{color:st.color,weight:3.5,opacity:.9}).addTo(homeMap);
+  });
+  TRACK.waypoints.forEach(w=>{
+    const cls=w.type==='hut'?'hut-ico':w.type==='peak'?'peak-ico':'camp-ico';
+    const emoji=w.type==='hut'?'⌂':w.type==='peak'?'▲':'⛺';
+    L.marker([w.lat,w.lon],{icon:L.divIcon({className:'',html:`<div class="${cls}" style="width:20px;height:20px;font-size:10px">${emoji}</div>`,iconSize:[20,20],iconAnchor:[10,10]})}).addTo(homeMap);
+  });
+  homeMap.fitBounds(L.latLngBounds(TRACK.points.map(p=>[p[0],p[1]])),{padding:[28,28]});
+  homeMap.getContainer().style.cursor='default';
+}
+
+// ============================================================
+//  TAB: TO DO (checklist condivisa del gruppo)
+// ============================================================
+function renderTodo(c){
+  const todos=(STATE.todos)||{};
+  const allItems=TODO.flatMap(cat=>cat.items);
+  const done=allItems.filter(it=>todos[todoKey(it)]).length;
+  const pct=allItems.length?Math.round(done/allItems.length*100):0;
+  c.innerHTML=`
+    <h2 class="pt">Da fare prima di partire</h2>
+    <p class="pd">Le cose da prenotare e organizzare per il viaggio. È una lista condivisa: quando qualcuno spunta una voce, vale per tutto il gruppo.</p>
+    <div class="ck-progress">
+      <div class="row"><span style="font-size:13px;color:var(--slate-light);font-weight:500">COMPLETATO</span><b id="tdPct">${pct}%</b></div>
+      <div class="pbar"><div class="pbar-fill" id="tdFill" style="width:0%"></div></div>
+      <div style="font-size:12px;color:var(--slate-light);margin-top:8px" id="tdCounts">${done} di ${allItems.length} completate</div>
+    </div>
+    <div id="todoList">
+      ${TODO.map((cat,ci)=>`
+        <div class="cat open" data-ci="${ci}">
+          <div class="cat-head" onclick="this.parentElement.classList.toggle('open')">
+            <h3>${cat.ic} ${esc(cat.cat)}</h3>
+            <div style="display:flex;align-items:center;gap:10px"><span class="cnt" data-tdcnt="${ci}">${cat.items.filter(it=>todos[todoKey(it)]).length}/${cat.items.length}</span><span class="arr">▼</span></div>
+          </div>
+          <div class="cat-items">
+            ${cat.items.map(it=>{
+              const k=todoKey(it);const who=todos[k];
+              return `<div class="ck-item td-item ${who?'done':''}" data-tdk="${k}" onclick="toggleTodo('${k}')">
+                <span class="box">✓</span><span class="lbl">${esc(it)}${who&&who.nick?`<span class="td-who">fatto da ${esc(who.nick)}</span>`:''}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>`).join('')}
+    </div>
+  `;
+  requestAnimationFrame(()=>{$('#tdFill').style.width=pct+'%';});
+}
+function todoKey(it){return it.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,50)}
+let tdSaveTimer=null;
+window.toggleTodo=function(k){
+  if(!STATE.todos)STATE.todos={};
+  if(STATE.todos[k])delete STATE.todos[k];else STATE.todos[k]={done:true,nick:ME.nick,ts:Date.now()};
+  const todos=STATE.todos;
+  // update mirato
+  document.querySelectorAll(`.td-item[data-tdk="${k}"]`).forEach(el=>{
+    const on=!!todos[k];el.classList.toggle('done',on);
+    const lbl=el.querySelector('.lbl');const w=lbl.querySelector('.td-who');
+    if(on&&!w){const s=document.createElement('span');s.className='td-who';s.textContent=`fatto da ${ME.nick}`;lbl.appendChild(s);}
+    else if(!on&&w){w.remove();}
+  });
+  const allItems=TODO.flatMap(cat=>cat.items);
+  TODO.forEach((cat,ci)=>{const d=cat.items.filter(it=>todos[todoKey(it)]).length;const cnt=document.querySelector(`.cnt[data-tdcnt="${ci}"]`);if(cnt)cnt.textContent=`${d}/${cat.items.length}`;});
+  const done=allItems.filter(it=>todos[todoKey(it)]).length;
+  const pct=allItems.length?Math.round(done/allItems.length*100):0;
+  if($('#tdPct'))$('#tdPct').textContent=pct+'%';
+  if($('#tdFill'))$('#tdFill').style.width=pct+'%';
+  if($('#tdCounts'))$('#tdCounts').textContent=`${done} di ${allItems.length} completate`;
+  clearTimeout(tdSaveTimer);
+  tdSaveTimer=setTimeout(async()=>{
+    try{await api('/api/data',{action:'setTodos',token:TOKEN,nick:ME.nick,todos});}
+    catch(e){toast(e.message,true);}
+  },600);
 };
 
 // ============================================================
@@ -891,7 +1072,7 @@ async function renderMappa(c){
 }
 function initGmap(){
   gmap=L.map('gmap');
-  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{attribution:'© OpenTopoMap',maxZoom:16}).addTo(gmap);
+  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{attribution:'© OpenTopoMap',maxZoom:16,className:'map-tiles-light'}).addTo(gmap);
   // tappe
   TRACK.stages.forEach(st=>{
     const seg=TRACK.points.filter(p=>p[3]>=st.from&&p[3]<=st.to).map(p=>[p[0],p[1]]);
@@ -933,7 +1114,7 @@ function renderMapData(){
   });
   (STATE.comments||[]).forEach(cm=>{
     L.marker([cm.lat,cm.lng],{icon:L.divIcon({className:'',html:'<div class="cmt-ico">💬</div>',iconSize:[22,22],iconAnchor:[11,11]})}).addTo(gLayers.comments)
-      .bindPopup(`<div style="max-width:220px"><div style="font-size:11.5px;font-weight:700;color:#0c4a6e">${esc(cm.nick)} <span style="font-weight:400;color:#94a3b8">${fmtDate(cm.ts)}</span></div><div style="font-size:13px;margin-top:3px">${esc(cm.text)}</div>${cm.member===ME.id?`<button onclick="delComment('${cm.id}')" style="color:#dc2626;background:none;border:none;text-decoration:underline;cursor:pointer;font-size:11px;padding:4px 0">elimina</button>`:''}</div>`);
+      .bindPopup(`<div style="max-width:220px"><div style="font-size:11.5px;font-weight:500;color:#0c4a6e">${esc(cm.nick)} <span style="font-weight:400;color:#94a3b8">${fmtDate(cm.ts)}</span></div><div style="font-size:13px;margin-top:3px">${esc(cm.text)}</div>${cm.member===ME.id?`<button onclick="delComment('${cm.id}')" style="color:#dc2626;background:none;border:none;text-decoration:underline;cursor:pointer;font-size:11px;padding:4px 0">elimina</button>`:''}</div>`);
   });
   // checkin timeline
   const ci=(STATE.checkins||[]).slice().sort((a,b)=>a.ts-b.ts);
@@ -1116,7 +1297,7 @@ window.regen=async function(mid,nick){
   if(!confirm(`Rigenerare il codice di ${nick}? Il vecchio codice non funzionerà più.`))return;
   try{
     const d=await api('/api/auth',{action:'regenerate',token:TOKEN,target:mid});
-    $('#regenResult').innerHTML=`<div class="new-code"><div style="font-size:12px;color:#15803d;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Nuovo codice per ${esc(d.nick)}</div><div class="code">${esc(d.code)}</div><small>Copialo e invialo ora: non sarà più visibile dopo.</small></div>`;
+    $('#regenResult').innerHTML=`<div class="new-code"><div style="font-size:12px;color:#15803d;font-weight:500;text-transform:uppercase;letter-spacing:.05em">Nuovo codice per ${esc(d.nick)}</div><div class="code">${esc(d.code)}</div><small>Copialo e invialo ora: non sarà più visibile dopo.</small></div>`;
     $('#regenResult').scrollIntoView({behavior:'smooth',block:'center'});
   }catch(e){toast(e.message,true);}
 };
