@@ -216,6 +216,7 @@ input,textarea,select{font-family:inherit;font-size:15px}
 .admin-row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:15px;padding:12px 15px;margin-bottom:9px;box-shadow:var(--shadow)}
 .admin-row .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit';font-weight:500}
 .admin-row .info{flex:1}
+.admin-btns{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
 .admin-row b{font-family:'Outfit';color:var(--navy);font-size:14px}
 .admin-row small{display:block;color:var(--slate-light);font-size:11px}
 .new-code{background:#f0fdf4;border:2px solid #bbf7d0;border-radius:15px;padding:15px;margin:12px 0;text-align:center}
@@ -245,6 +246,7 @@ input,textarea,select{font-family:inherit;font-size:15px}
 
 /* ===== TO DO ===== */
 .td-item .lbl{display:flex;flex-direction:column;gap:1px}
+.item-note{display:block;font-size:11px;color:var(--slate-light);font-weight:400;margin-top:3px;line-height:1.4}
 .td-who{font-size:10.5px;color:var(--green);font-weight:500}
 .td-item.done .td-who{color:var(--slate-light)}
 
@@ -390,7 +392,7 @@ const DAYS=[
 
 // SCELTE da raccogliere
 const CHOICES=[
-  {id:'sauna9',day:'DOM 9 AGO',q:'Sauna a Gjendesheim la sera dell\'arrivo?',d:'Costa ~200 NOK/ora, va prenotata in anticipo. Chi la farebbe?',opts:[['si','Sì, ci sto'],['no','No, passo'],['forse','Dipende dall\'orario di arrivo']]},
+  {id:'sauna9',day:'DOM 9 AGO',q:'Sauna a Gjendesheim la sera dell\'arrivo?',d:'Costa ~18€/ora, va prenotata in anticipo. Chi la farebbe?',opts:[['si','Sì, ci sto'],['no','No, passo'],['forse','Dipende dall\'orario di arrivo']]},
   {id:'leir12',day:'MER 12 AGO',q:'A Leirvassbu: rifugio o tenda?',d:'Il rifugio (da ~100€/notte) offre letto e cena calda; la tenda è gratis ma con servizi a pagamento. In entrambi i casi va chiamato per prenotare.',opts:[['rifugio','Rifugio — letto e cena'],['tenda','Tenda — spendo meno'],['indeciso','Ancora indeciso']]},
   {id:'esc13',day:'GIO 13 AGO',q:'Che tipo di escursione il 13?',d:'Giornata di escursione dal base camp prima del bus serale. Verso cosa puntiamo?',opts:[['vetta','Una vetta impegnativa (Galdhøpiggen/Glittertind)'],['laghi','Giro tranquillo tra laghi e ghiacciai'],['relax','Mezza giornata soft, poi relax']]},
   {id:'oslo15',day:'SAB 15 AGO',q:'Oltre a Munch, cosa a Oslo il 15?',d:'Idee per il pomeriggio in città dopo il museo.',opts:[['fiordo','Giro in barca sul fiordo'],['quartieri','Quartieri e street food (Grünerløkka)'],['vigeland','Parco Vigeland e relax'],['shopping','Shopping e giro libero']]}
@@ -399,7 +401,7 @@ const CHOICES=[
 // CHECKLIST — categorie (base dalla lista + aggiunte Norvegia)
 const CHECKLIST=[
   {cat:'Fondamentale',ic:'🎒',
-    req:['Zaino da trekking','Scarponcini rodati','Borraccia / sacca idrica','Occhiali da sole','Torcia frontale + pile','Powerbank + cavi','Documenti + tessera sanitaria','Contanti (NOK) + carta','Telefono'],
+    req:['Zaino da trekking','Scarponcini rodati',['Acqua: borraccia o bottiglie','Almeno 4 litri a testa, meglio 6. Consigliate le bottiglie di plastica invece delle borracce di metallo: più leggere da piene e da vuote, e si possono comprimere.'],'Occhiali da sole','Torcia frontale + pile','Powerbank + cavi','Documenti + tessera sanitaria','Contanti (euro) + carta','Telefono'],
     opt:['Tenda (da dividere nel gruppo)']},
   {cat:'⚠ Da comprare a Oslo',ic:'🛒',warn:true,
     req:['Bombolette gas (NON in aereo!)','Cibo fresco per i primi giorni'],
@@ -905,9 +907,9 @@ function renderChecklist(c){
   const optAll=optItems();
   const optDone=optAll.filter(it=>mine[itemKey(it)]).length;
   const ckItem=(it,warn)=>{
-    const k=itemKey(it);
+    const k=itemKey(it);const lbl=itemLabel(it);const note=itemNote(it);
     return `<div class="ck-item ${mine[k]?'done':''} ${warn?'warn':''}" data-k="${k}" onclick="toggleItem('${k}')">
-      <span class="box">✓</span><span class="lbl">${warn?'<b>':''}${esc(it)}${warn?'</b>':''}</span>
+      <span class="box">✓</span><span class="lbl">${warn?'<b>':''}${esc(lbl)}${warn?'</b>':''}${note?`<span class="item-note">${esc(note)}</span>`:''}</span>
     </div>`;
   };
   c.innerHTML=`
@@ -948,7 +950,9 @@ function renderChecklist(c){
   requestAnimationFrame(()=>{$('#ckFill').style.width=pct+'%';});
   renderCkOthers();
 }
-function itemKey(it){return it.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,50)}
+function itemLabel(it){return Array.isArray(it)?it[0]:it}
+function itemNote(it){return Array.isArray(it)?it[1]:null}
+function itemKey(it){return itemLabel(it).toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,50)}
 function renderCkOthers(){
   const el=$('#ckOthers');if(!el)return;
   const req=reqItems();
@@ -1280,21 +1284,34 @@ window.delCheckin=async function(id){
 function renderAdmin(c){
   c.innerHTML=`
     <h2 class="pt">Pannello admin</h2>
-    <p class="pd">Rigenera i codici di accesso dei partecipanti. Il vecchio codice smette di funzionare subito. Utile per testare o se qualcuno perde il proprio.</p>
+    <p class="pd">Gestisci i codici di accesso e le scelte dei partecipanti.</p>
     <div id="adminList">
       ${MEMBERS.map(([mid,nick,name])=>`
         <div class="admin-row">
           ${av(mid,nick,36)}
           <div class="info"><b>${esc(nick)}</b><small>${esc(name)}</small></div>
-          <button class="btn sm ghost" onclick="regen('${mid}','${esc(nick)}')">Rigenera codice</button>
+          <div class="admin-btns">
+            <button class="btn sm ghost" onclick="regen('${mid}','${esc(nick)}')">Rigenera codice</button>
+            <button class="btn sm ghost" onclick="resetChoices('${mid}','${esc(nick)}')">Resetta scelte</button>
+          </div>
         </div>`).join('')}
     </div>
     <div id="regenResult"></div>
     <div style="margin-top:22px;padding:16px;background:#fffbeb;border:1px solid #fde68a;border-radius:14px;font-size:12.5px;color:#92400e">
-      <b>Come funziona la distribuzione:</b> genera qui il codice di ciascuno e invialo alla persona (es. su WhatsApp). Ognuno entra scegliendo il proprio nome + il codice ricevuto. I codici sono salvati in forma cifrata: nemmeno tu puoi rileggerli dopo, puoi solo rigenerarli.
+      <b>Rigenera codice:</b> crea un nuovo codice per la persona e invialo (es. su WhatsApp); il vecchio smette di funzionare. I codici sono cifrati: nemmeno tu puoi rileggerli dopo, solo rigenerarli.<br><br>
+      <b>Resetta scelte:</b> cancella le risposte già date da una persona. Al successivo accesso le rivedrà da capo, come se fosse il primo login (utile per test o se qualcuno vuole rifarle).
     </div>
   `;
 }
+window.resetChoices=async function(mid,nick){
+  if(!confirm(`Resettare le scelte di ${nick}? Al prossimo accesso dovrà rifarle da capo.`))return;
+  try{
+    const d=await api('/api/auth',{action:'resetChoices',token:TOKEN,target:mid});
+    // aggiorna lo stato locale così la pagina Scelte riflette subito il reset
+    if(STATE.choices)delete STATE.choices[mid];
+    toast(d.alreadyEmpty?`${nick} non aveva ancora scelte`:`Scelte di ${nick} resettate`);
+  }catch(e){toast(e.message,true);}
+};
 window.regen=async function(mid,nick){
   if(!confirm(`Rigenerare il codice di ${nick}? Il vecchio codice non funzionerà più.`))return;
   try{
