@@ -58,5 +58,13 @@
   "ts": 1783432381375,
   "summary": "Aggiunta \"Comprare fornellino di scorta\" a Pasti.",
   "resolvedTs": 1783432385561
+ },
+ {
+  "id": "mraplo5hbadb60",
+  "member": "matteo",
+  "nick": "Matte",
+  "text": "Modifica il nome di Salva in King (emoji corona) ovunque appaia nel sito",
+  "status": "pending",
+  "ts": 1783432396421
  }
 ]
