@@ -56,8 +56,29 @@ export async function mutateText(path, mutateFn, message) {
     const { text, sha } = await ghGet(path);
     const newText = mutateFn(text);
     if (newText === null) return { applied: false };
-    try { await ghPutText(path, newText, sha, message); return { applied: true }; }
+    try { await ghPutText(path, newText, sha, message); return { applied: true, file: path, beforeSha: sha }; }
     catch (e) { lastErr = e; await new Promise(r => setTimeout(r, 300 + attempt * 400)); }
+  }
+  throw lastErr;
+}
+
+// ---------- ripristina un file al contenuto che aveva PRIMA di una modifica (rollback) ----------
+// beforeSha è lo sha-blob git catturato da mutateText al momento della scrittura: git conserva
+// quel contenuto per sempre nella cronologia, quindi basta richiederlo e riscriverlo.
+export async function revertOneFile(file, beforeSha) {
+  const br = await fetch(`https://api.github.com/repos/${REPO}/git/blobs/${beforeSha}`, { headers: GH_HEADERS() });
+  if (!br.ok) throw new Error(`GH GET blob ${beforeSha}: ${br.status}`);
+  const blob = await br.json(); // { content (base64), encoding, sha, size }
+  let lastErr;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const { sha: currentSha } = await ghGet(file);
+    const body = { message: `Rollback: ripristino ${file} a versione precedente`, content: blob.content.replace(/\n/g, ''), sha: currentSha, branch: 'main' };
+    const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${file}`, {
+      method: 'PUT', headers: { ...GH_HEADERS(), 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+    });
+    if (r.ok) return true;
+    lastErr = new Error(`GH PUT rollback ${file}: ${r.status} ${(await r.text()).slice(0, 150)}`);
+    await new Promise(r => setTimeout(r, 300 + attempt * 400));
   }
   throw lastErr;
 }
@@ -186,8 +207,9 @@ export async function processOneRequest(reqItem) {
       const pal = derivePalette(plan.base_hex);
       const r1 = await mutateText('public/gruppo.html', t => replaceRootVars(t, pal), `Modifiche IA: ricolora sito (richiesta di ${reqItem.nick})`);
       const r2 = await mutateText('public/index.html', t => replaceRootVars(t, pal), `Modifiche IA: ricolora sito (richiesta di ${reqItem.nick})`);
+      const changes = [r1, r2].filter(r => r.applied).map(r => ({ file: r.file, beforeSha: r.beforeSha }));
       return (r1.applied || r2.applied)
-        ? { status: 'done', summary: `Palette aggiornata (base ${plan.base_hex}).` }
+        ? { status: 'done', summary: `Palette aggiornata (base ${plan.base_hex}).`, changes }
         : { status: 'error', summary: 'Non sono riuscito a individuare le variabili colore nel file.' };
     }
 
@@ -204,7 +226,7 @@ export async function processOneRequest(reqItem) {
         });
       }, `Modifiche IA: aggiunta voce ${arrName} (richiesta di ${reqItem.nick})`);
       return r.applied
-        ? { status: 'done', summary: `Aggiunta "${plan.item}" a ${plan.category}.` }
+        ? { status: 'done', summary: `Aggiunta "${plan.item}" a ${plan.category}.`, changes: [{ file: r.file, beforeSha: r.beforeSha }] }
         : { status: 'error', summary: `Categoria "${plan.category}" non trovata esattamente — riprova specificando meglio il nome.` };
     }
 
@@ -228,7 +250,7 @@ export async function processOneRequest(reqItem) {
         return t.split(editPlan.old_str).join(editPlan.new_str);
       }, `Modifiche IA: modifica testo (richiesta di ${reqItem.nick})`);
       return r.applied
-        ? { status: 'done', summary: 'Testo aggiornato.' }
+        ? { status: 'done', summary: 'Testo aggiornato.', changes: [{ file: r.file, beforeSha: r.beforeSha }] }
         : { status: 'error', summary: 'Il punto esatto da modificare non è stato trovato in modo univoco nel file (potrebbe essere cambiato nel frattempo).' };
     }
 
@@ -246,5 +268,17 @@ export async function saveRequestOutcome(id, outcome) {
     item.status = outcome.status;
     item.summary = outcome.summary;
     item.resolvedTs = Date.now();
+    if (outcome.changes && outcome.changes.length) item.changes = outcome.changes;
   }, `Modifiche IA: esito richiesta ${id}`);
 }
+
+// ---------- annulla una richiesta già applicata, ripristinando i file toccati ----------
+export async function revertRequest(reqItem) {
+  if (reqItem.status !== 'done' || !reqItem.changes || !reqItem.changes.length) {
+    throw new Error('Questa richiesta non ha modifiche applicabili da annullare.');
+  }
+  for (const ch of reqItem.changes) {
+    await revertOneFile(ch.file, ch.beforeSha);
+  }
+}
+
