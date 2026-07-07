@@ -14,8 +14,10 @@
   "member": "matteo",
   "nick": "Matte",
   "text": "Aggiungi al to-do, categoria Attività: prenotare il noleggio di due canoe a Leirvassbu",
-  "status": "pending",
-  "ts": 1783416738179
+  "status": "done",
+  "ts": 1783416738179,
+  "summary": "Aggiunta \"Prenotare il noleggio di due canoe a Leirvassbu\" a Attività.",
+  "resolvedTs": 1783416871427
  },
  {
   "id": "mraga41jb14967",
