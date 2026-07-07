@@ -189,6 +189,24 @@ input,textarea,select{font-family:inherit;font-size:15px}
 .add-post button{background:var(--navy);color:#fff;border-radius:11px;padding:0 16px;font-weight:500;font-size:13px}
 .no-posts{font-size:12.5px;color:var(--slate-light);font-style:italic;padding:6px 0}
 
+/* ===== MODIFICHE IA ===== */
+.ia-compose{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:14px 16px;margin-bottom:18px}
+.ia-compose textarea{width:100%;border:1.5px solid var(--border);border-radius:12px;padding:11px 13px;font-family:inherit;font-size:13.5px;min-height:64px;resize:vertical;outline:none;margin-bottom:10px}
+.ia-compose textarea:focus{border-color:var(--sky)}
+.ia-item{display:flex;gap:11px;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:13px 15px;margin-bottom:11px}
+.ia-body{flex:1;min-width:0}
+.ia-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.ia-top b{font-size:13px;color:var(--navy)}
+.ia-when{font-size:10.5px;color:var(--slate-light)}
+.ia-badge{font-size:10px;font-weight:600;padding:2px 9px;border-radius:999px;margin-left:auto}
+.ia-pending{background:#fef3c7;color:#b45309}
+.ia-done{background:#dcfce7;color:#15803d}
+.ia-rejected{background:#fee2e2;color:#b91c1c}
+.ia-error{background:#fee2e2;color:#b91c1c}
+.ia-manual{background:#e0e7ff;color:#4338ca}
+.ia-txt{font-size:13.5px;color:var(--slate)}
+.ia-summary{font-size:12px;color:var(--slate-light);margin-top:5px;padding-top:5px;border-top:1px dashed var(--border)}
+
 /* ===== MAPPA ===== */
 #gmap{height:clamp(340px,52vh,560px);border-radius:20px;box-shadow:var(--shadow-lg);border:1px solid var(--border);z-index:1}
 .map-fabs{display:flex;gap:9px;margin-top:13px;flex-wrap:wrap}
@@ -381,7 +399,7 @@ function avColor(id){return AVCOLORS[id]||'#64748b'}
 
 // Immagini di sfondo per pagina (ciclo parallax onboarding)
 const OB_BACKGROUNDS=['/assets/hero_fiordo.jpg','/assets/hero_bergen_color.jpg','/assets/hero_aurora.jpg','/assets/hero_fiordo.jpg','/assets/hero_bergen_day.jpg','/assets/hero_panorama.jpg','/assets/hero_bergen_snow.jpg'];
-const PAGE_BG={programma:'/assets/bg_fiordo.jpg',scelte:'/assets/bg_panorama.jpg',checklist:'/assets/bg_tenda.jpg',todo:'/assets/bg_bergen_snow.jpg',pasti:'/assets/bg_orso.jpg',mappa:'/assets/bg_bergen_color.jpg',admin:'/assets/bg_bandiera.jpg'};
+const PAGE_BG={programma:'/assets/bg_fiordo.jpg',scelte:'/assets/bg_panorama.jpg',checklist:'/assets/bg_tenda.jpg',todo:'/assets/bg_bergen_snow.jpg',ia:'/assets/bg_gradiente.jpg',pasti:'/assets/bg_orso.jpg',mappa:'/assets/bg_bergen_color.jpg',admin:'/assets/bg_bandiera.jpg'};
 
 // PROGRAMMA giorno per giorno
 const DAYS=[
@@ -686,6 +704,7 @@ const TABS=[
   {id:'scelte',ic:'🗳',label:'Scelte'},
   {id:'checklist',ic:'✅',label:'Checklist'},
   {id:'todo',ic:'📌',label:'To Do'},
+  {id:'ia',ic:'🤖',label:'Modifiche IA'},
   {id:'pasti',ic:'🍲',label:'Pasti'},
   {id:'mappa',ic:'🗺',label:'Mappa'}
 ];
@@ -710,6 +729,7 @@ window.switchTab=function(id){
   else if(id==='scelte')renderScelte(c);
   else if(id==='checklist')renderChecklist(c);
   else if(id==='todo')renderTodo(c);
+  else if(id==='ia')renderIA(c);
   else if(id==='pasti')renderPasti(c);
   else if(id==='mappa')renderMappa(c);
   else if(id==='admin')renderAdmin(c);
@@ -723,6 +743,7 @@ const HOME_BRANCHES=[
   {id:'scelte',ic:'🗳',title:'Scelte',desc:'Le decisioni del gruppo'},
   {id:'checklist',ic:'✅',title:'Checklist',desc:'La tua attrezzatura'},
   {id:'todo',ic:'📌',title:'To Do',desc:'Cosa prenotare e organizzare'},
+  {id:'ia',ic:'🤖',title:'Modifiche IA',desc:'Chiedi una modifica al sito'},
   {id:'pasti',ic:'🍲',title:'Pasti',desc:'Cosa si mangia e chi porta'},
   {id:'mappa',ic:'🗺',title:'Mappa',desc:'Percorso, foto e commenti'}
 ];
@@ -831,6 +852,47 @@ window.toggleTodo=function(k){
     try{await api('/api/data',{action:'setTodos',token:TOKEN,nick:ME.nick,todos});}
     catch(e){toast(e.message,true);}
   },600);
+};
+
+// ============================================================
+//  TAB: MODIFICHE IA (richieste al sito, gestite da un agente automatico)
+// ============================================================
+const IA_STATUS_LABEL={pending:'In attesa',done:'Fatto',rejected:'Rifiutata',error:'Errore',manual:'Serve chat con Claude'};
+const IA_STATUS_CLASS={pending:'ia-pending',done:'ia-done',rejected:'ia-rejected',error:'ia-error',manual:'ia-manual'};
+function renderIA(c){
+  const list=(STATE.aiRequests||[]).slice().sort((a,b)=>b.ts-a.ts);
+  c.innerHTML=`
+    <h2 class="pt">Modifiche IA</h2>
+    <p class="pd">Scrivi qui una richiesta di modifica al sito — es. "fai il sito rosso" o "aggiungi il coltellino multiuso alla checklist". Un agente automatico la legge quattro volte al giorno (00, 12, 16, 20) e la applica da solo se rientra in ciò che sa gestire in autonomia: colori del sito, piccoli testi, voci di checklist o to-do. Richieste più complesse restano segnalate per essere fatte a mano in chat con Claude.</p>
+    <div class="ia-compose">
+      <textarea id="iaText" placeholder="Scrivi la tua richiesta..." maxlength="600"></textarea>
+      <button class="btn" id="btnIaSend" onclick="submitAiRequest()">Invia richiesta</button>
+    </div>
+    <div id="iaList">
+      ${list.length?list.map(r=>`
+        <div class="ia-item">
+          ${av(r.member,r.nick,32)}
+          <div class="ia-body">
+            <div class="ia-top"><b>${esc(r.nick)}</b><span class="ia-when">${fmtDate(r.ts)}</span><span class="ia-badge ${IA_STATUS_CLASS[r.status]||'ia-pending'}">${IA_STATUS_LABEL[r.status]||r.status}</span></div>
+            <div class="ia-txt">${esc(r.text)}</div>
+            ${r.summary?`<div class="ia-summary">${esc(r.summary)}</div>`:''}
+          </div>
+        </div>`).join(''):'<div class="no-posts">Nessuna richiesta ancora. Scrivi la prima!</div>'}
+    </div>
+  `;
+}
+window.submitAiRequest=async function(){
+  const ta=$('#iaText');const text=ta.value.trim();
+  if(!text)return;
+  const btn=$('#btnIaSend');btn.disabled=true;btn.textContent='Invio…';
+  try{
+    const d=await api('/api/data',{action:'addAiRequest',token:TOKEN,nick:ME.nick,text});
+    STATE.aiRequests=d.aiRequests;
+    ta.value='';
+    renderIA($('#pageContent'));
+    toast('Richiesta inviata — verrà letta al prossimo passaggio dell\'agente');
+  }catch(e){toast(e.message,true);}
+  btn.disabled=false;btn.textContent='Invia richiesta';
 };
 
 // ============================================================
