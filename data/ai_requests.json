@@ -48,5 +48,13 @@
   "ts": 1783417688325,
   "summary": "Expected property name or '}' in JSON at position 1 (line 1 column 2)",
   "resolvedTs": 1783427284180
+ },
+ {
+  "id": "mraplcjj78bccf",
+  "member": "matteo",
+  "nick": "Matte",
+  "text": "Aggiungi al to-do, categoria Pasti: comprare fornellino di scorta",
+  "status": "pending",
+  "ts": 1783432381375
  }
 ]
