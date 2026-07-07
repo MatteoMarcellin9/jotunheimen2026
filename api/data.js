@@ -1,5 +1,6 @@
 // API dati — legge/scrive i file JSON in data/ usando GitHub come database
 import crypto from 'crypto';
+import { processOneRequest, saveRequestOutcome } from './_lib/agentCore.js';
 
 const GH_TOKEN = process.env.GH_TOKEN;
 const SECRET = process.env.SESSION_SECRET;
@@ -169,9 +170,21 @@ export default async function handler(req, res) {
       if (!text || typeof text !== 'string' || !text.trim() || text.length > 600) {
         return res.status(400).json({ error: 'Scrivi una richiesta valida (max 600 caratteri).' });
       }
-      const updated = await mutate('data/ai_requests.json', c => {
-        c.push({ id: newId(), member: memberId, nick, text: text.trim(), status: 'pending', ts: now });
+      const newItem = { id: newId(), member: memberId, nick, text: text.trim(), status: 'pending', ts: now };
+      let updated = await mutate('data/ai_requests.json', c => {
+        c.push(newItem);
       }, `${nick}: nuova richiesta modifiche IA`);
+
+      // innesco immediato: provo a elaborarla subito, così l'utente vede l'esito senza aspettare
+      // il prossimo passaggio del cron (che resta comunque come rete di sicurezza in caso di errore qui)
+      try {
+        const outcome = await processOneRequest(newItem);
+        updated = await saveRequestOutcome(newItem.id, outcome);
+      } catch (e) {
+        // se l'elaborazione immediata fallisce per qualunque motivo, la richiesta resta 'pending':
+        // la riprenderà il passaggio schedulato, senza che l'invio dell'utente fallisca
+      }
+
       return res.status(200).json({ ok: true, aiRequests: updated });
     }
 
