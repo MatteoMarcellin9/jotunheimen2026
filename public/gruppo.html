@@ -863,7 +863,7 @@ function renderIA(c){
   const list=(STATE.aiRequests||[]).slice().sort((a,b)=>b.ts-a.ts);
   c.innerHTML=`
     <h2 class="pt">Modifiche IA</h2>
-    <p class="pd">Scrivi qui una richiesta di modifica al sito — es. "fai il sito rosso" o "aggiungi il coltellino multiuso alla checklist". Un agente automatico la legge quattro volte al giorno (00, 12, 16, 20) e la applica da solo se rientra in ciò che sa gestire in autonomia: colori del sito, piccoli testi, voci di checklist o to-do. Richieste più complesse restano segnalate per essere fatte a mano in chat con Claude.</p>
+    <p class="pd">Scrivi qui una richiesta di modifica al sito — es. "fai il sito rosso" o "aggiungi il coltellino multiuso alla checklist". Un agente automatico la elabora subito, in pochi secondi, e la applica da solo se rientra in ciò che sa gestire in autonomia: colori del sito, piccoli testi, voci di checklist o to-do. Richieste più complesse restano segnalate per essere fatte a mano in chat con Claude.</p>
     <div class="ia-compose">
       <textarea id="iaText" placeholder="Scrivi la tua richiesta..." maxlength="600"></textarea>
       <button class="btn" id="btnIaSend" onclick="submitAiRequest()">Invia richiesta</button>
@@ -884,13 +884,19 @@ function renderIA(c){
 window.submitAiRequest=async function(){
   const ta=$('#iaText');const text=ta.value.trim();
   if(!text)return;
-  const btn=$('#btnIaSend');btn.disabled=true;btn.textContent='Invio…';
+  const btn=$('#btnIaSend');btn.disabled=true;btn.textContent='Elaboro…';
   try{
     const d=await api('/api/data',{action:'addAiRequest',token:TOKEN,nick:ME.nick,text});
     STATE.aiRequests=d.aiRequests;
     ta.value='';
     renderIA($('#pageContent'));
-    toast('Richiesta inviata — verrà letta al prossimo passaggio dell\'agente');
+    const mine=(d.aiRequests||[]).slice().sort((a,b)=>b.ts-a.ts)[0];
+    if(mine&&mine.status!=='pending'){
+      const labels={done:'Fatto ✓',rejected:'Rifiutata',error:'Errore — verrà ritentata',manual:'Serve chat con Claude'};
+      toast(labels[mine.status]||'Richiesta elaborata');
+    }else{
+      toast('Richiesta inviata — verrà ritentata a breve');
+    }
   }catch(e){toast(e.message,true);}
   btn.disabled=false;btn.textContent='Invia richiesta';
 };
