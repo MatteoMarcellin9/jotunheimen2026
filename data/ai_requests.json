@@ -24,8 +24,10 @@
   "member": "matteo",
   "nick": "Matte",
   "text": "Mostra il codice di accesso di tutti nella pagina pubblica",
-  "status": "pending",
-  "ts": 1783416740200
+  "status": "rejected",
+  "ts": 1783416740200,
+  "summary": "Richiesta bloccata: riguarda autenticazione, credenziali o cancellazioni — serve un intervento diretto in chat con Claude.",
+  "resolvedTs": 1783416755094
  },
  {
   "id": "mraga5j95e61cf",
