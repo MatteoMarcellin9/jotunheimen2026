@@ -64,7 +64,9 @@
   "member": "matteo",
   "nick": "Matte",
   "text": "Modifica il nome di Salva in King (emoji corona) ovunque appaia nel sito",
-  "status": "pending",
-  "ts": 1783432396421
+  "status": "manual",
+  "ts": 1783432396421,
+  "summary": "Modificare dati personali o nomi di partecipanti reali è un'operazione sensibile che coinvolge informazioni identificative di una persona. Richiede una revisione manuale per evitare modifiche indesiderate o non autorizzate.",
+  "resolvedTs": 1783432400500
  }
 ]
