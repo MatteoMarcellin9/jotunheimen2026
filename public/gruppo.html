@@ -204,6 +204,9 @@ input,textarea,select{font-family:inherit;font-size:15px}
 .ia-rejected{background:#fee2e2;color:#b91c1c}
 .ia-error{background:#fee2e2;color:#b91c1c}
 .ia-manual{background:#e0e7ff;color:#4338ca}
+.ia-reverted{background:#f1f5f9;color:var(--slate-light)}
+.ia-revert{margin-top:8px;background:none;border:1.5px solid var(--border);color:var(--slate);font-size:11.5px;font-weight:600;padding:5px 12px;border-radius:999px;transition:.2s}
+.ia-revert:hover{border-color:var(--red);color:var(--red)}
 .ia-txt{font-size:13.5px;color:var(--slate)}
 .ia-summary{font-size:12px;color:var(--slate-light);margin-top:5px;padding-top:5px;border-top:1px dashed var(--border)}
 
@@ -857,13 +860,13 @@ window.toggleTodo=function(k){
 // ============================================================
 //  TAB: MODIFICHE IA (richieste al sito, gestite da un agente automatico)
 // ============================================================
-const IA_STATUS_LABEL={pending:'In attesa',done:'Fatto',rejected:'Rifiutata',error:'Errore',manual:'Serve chat con Claude'};
-const IA_STATUS_CLASS={pending:'ia-pending',done:'ia-done',rejected:'ia-rejected',error:'ia-error',manual:'ia-manual'};
+const IA_STATUS_LABEL={pending:'In attesa',done:'Fatto',rejected:'Rifiutata',error:'Errore',manual:'Serve chat con Claude',reverted:'Annullata'};
+const IA_STATUS_CLASS={pending:'ia-pending',done:'ia-done',rejected:'ia-rejected',error:'ia-error',manual:'ia-manual',reverted:'ia-reverted'};
 function renderIA(c){
   const list=(STATE.aiRequests||[]).slice().sort((a,b)=>b.ts-a.ts);
   c.innerHTML=`
     <h2 class="pt">Modifiche IA</h2>
-    <p class="pd">Scrivi qui una richiesta di modifica al sito — es. "fai il sito rosso" o "aggiungi il coltellino multiuso alla checklist". Un agente automatico la elabora subito, in pochi secondi, e la applica da solo se rientra in ciò che sa gestire in autonomia: colori del sito, piccoli testi, voci di checklist o to-do. Richieste più complesse restano segnalate per essere fatte a mano in chat con Claude.</p>
+    <p class="pd">Scrivi qui una richiesta di modifica al sito — es. "fai il sito rosso" o "aggiungi il coltellino multiuso alla checklist". Un agente automatico la elabora subito, in pochi secondi, e la applica da solo se rientra in ciò che sa gestire in autonomia: colori del sito, piccoli testi, voci di checklist o to-do. Richieste più complesse restano segnalate per essere fatte a mano in chat con Claude. Ogni modifica applicata si può annullare in un tocco.</p>
     <div class="ia-compose">
       <textarea id="iaText" placeholder="Scrivi la tua richiesta..." maxlength="600"></textarea>
       <button class="btn" id="btnIaSend" onclick="submitAiRequest()">Invia richiesta</button>
@@ -876,11 +879,22 @@ function renderIA(c){
             <div class="ia-top"><b>${esc(r.nick)}</b><span class="ia-when">${fmtDate(r.ts)}</span><span class="ia-badge ${IA_STATUS_CLASS[r.status]||'ia-pending'}">${IA_STATUS_LABEL[r.status]||r.status}</span></div>
             <div class="ia-txt">${esc(r.text)}</div>
             ${r.summary?`<div class="ia-summary">${esc(r.summary)}</div>`:''}
+            ${r.status==='done'&&r.changes&&r.changes.length?`<button class="ia-revert" onclick="revertAiRequestFn('${r.id}')">↩ Annulla questa modifica</button>`:''}
+            ${r.status==='reverted'?`<div class="ia-summary">Annullata da ${esc(r.revertedBy||'')} — il sito è tornato come prima di questa modifica.</div>`:''}
           </div>
         </div>`).join(''):'<div class="no-posts">Nessuna richiesta ancora. Scrivi la prima!</div>'}
     </div>
   `;
 }
+window.revertAiRequestFn=async function(id){
+  if(!confirm('Annullare questa modifica? Il sito tornerà come prima, con un nuovo deploy automatico.'))return;
+  try{
+    const d=await api('/api/data',{action:'revertAiRequest',token:TOKEN,nick:ME.nick,requestId:id});
+    STATE.aiRequests=d.aiRequests;
+    renderIA($('#pageContent'));
+    toast('Modifica annullata — il sito si sta ripubblicando');
+  }catch(e){toast(e.message,true);}
+};
 window.submitAiRequest=async function(){
   const ta=$('#iaText');const text=ta.value.trim();
   if(!text)return;
