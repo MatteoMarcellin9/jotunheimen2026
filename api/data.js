@@ -93,10 +93,10 @@ export default async function handler(req, res) {
       if (type === 'state') {
         const id = verifyToken(req.query.token);
         if (!id) return res.status(401).json({ error: 'Sessione scaduta, rifai il login.' });
-        const [choices, checklist, meals, comments, photos, checkins, members, todos] = await Promise.all([
+        const [choices, checklist, meals, comments, photos, checkins, members, todos, aiRequests] = await Promise.all([
           ghGet('data/choices.json'), ghGet('data/checklist.json'), ghGet('data/meals.json'),
           ghGet('data/comments.json'), ghGet('data/photos.json'), ghGet('data/checkins.json'),
-          ghGet('data/members.json'), ghGet('data/todos.json')
+          ghGet('data/members.json'), ghGet('data/todos.json'), ghGet('data/ai_requests.json')
         ]);
         return res.status(200).json({
           choices: choices.content,
@@ -106,6 +106,7 @@ export default async function handler(req, res) {
           photos: photos.content,
           checkins: checkins.content,
           todos: todos.content,
+          aiRequests: aiRequests.content,
           members: members.content.members.map(m => ({ id: m.id, nick: m.nick, name: m.name, admin: !!m.admin }))
         });
       }
@@ -161,6 +162,17 @@ export default async function handler(req, res) {
         Object.assign(c, clean);
       }, `${nick}: to-do aggiornati`);
       return res.status(200).json({ ok: true, todos: updated });
+    }
+
+    if (action === 'addAiRequest') {
+      const { text } = body;
+      if (!text || typeof text !== 'string' || !text.trim() || text.length > 600) {
+        return res.status(400).json({ error: 'Scrivi una richiesta valida (max 600 caratteri).' });
+      }
+      const updated = await mutate('data/ai_requests.json', c => {
+        c.push({ id: newId(), member: memberId, nick, text: text.trim(), status: 'pending', ts: now });
+      }, `${nick}: nuova richiesta modifiche IA`);
+      return res.status(200).json({ ok: true, aiRequests: updated });
     }
 
     if (action === 'addMealPost') {
