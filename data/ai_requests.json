@@ -124,5 +124,13 @@
   ],
   "revertedBy": "Matte",
   "revertedTs": 1783433713056
+ },
+ {
+  "id": "mrarijkx33b1c0",
+  "member": "matteo",
+  "nick": "Matte",
+  "text": "Test modifica: togli le emoji dalle tab di navigazione",
+  "status": "pending",
+  "ts": 1783435609761
  }
 ]
