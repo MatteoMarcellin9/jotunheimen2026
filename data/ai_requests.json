@@ -74,7 +74,9 @@
   "member": "matteo",
   "nick": "Matte",
   "text": "Modifica questo tab \"modifiche IA\" con \"Coda Modifiche\"",
-  "status": "pending",
-  "ts": 1783432534420
+  "status": "done",
+  "ts": 1783432534420,
+  "summary": "Testo aggiornato.",
+  "resolvedTs": 1783432542464
  }
 ]
