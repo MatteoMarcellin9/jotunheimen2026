@@ -112,7 +112,7 @@
   "member": "matteo",
   "nick": "Matte",
   "text": "Aggiungi alla checklist, categoria Varie, tra i facoltativi: occhialini da sole di scorta",
-  "status": "done",
+  "status": "reverted",
   "ts": 1783433687355,
   "summary": "Aggiunta \"occhialini da sole di scorta\" a Varie.",
   "resolvedTs": 1783433697298,
@@ -121,6 +121,8 @@
     "file": "public/gruppo.html",
     "beforeSha": "00c70772f5f75331c0fc629186a0b7366e7f8f94"
    }
-  ]
+  ],
+  "revertedBy": "Matte",
+  "revertedTs": 1783433713056
  }
 ]
