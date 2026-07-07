@@ -68,5 +68,13 @@
   "ts": 1783432396421,
   "summary": "Modificare dati personali o nomi di partecipanti reali è un'operazione sensibile che coinvolge informazioni identificative di una persona. Richiede una revisione manuale per evitare modifiche indesiderate o non autorizzate.",
   "resolvedTs": 1783432400500
+ },
+ {
+  "id": "mrapommsabefe6",
+  "member": "matteo",
+  "nick": "Matte",
+  "text": "Modifica questo tab \"modifiche IA\" con \"Coda Modifiche\"",
+  "status": "pending",
+  "ts": 1783432534420
  }
 ]
