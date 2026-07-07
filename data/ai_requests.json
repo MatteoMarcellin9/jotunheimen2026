@@ -94,7 +94,7 @@
   "member": "matteo",
   "nick": "Matte",
   "text": "Aggiungi al to-do, categoria Montagna: test rollback - voce temporanea",
-  "status": "done",
+  "status": "reverted",
   "ts": 1783433174378,
   "summary": "Aggiunta \"test rollback - voce temporanea\" a Montagna.",
   "resolvedTs": 1783433179067,
@@ -103,6 +103,8 @@
     "file": "public/gruppo.html",
     "beforeSha": "00c70772f5f75331c0fc629186a0b7366e7f8f94"
    }
-  ]
+  ],
+  "revertedBy": "Matte",
+  "revertedTs": 1783433192775
  }
 ]
