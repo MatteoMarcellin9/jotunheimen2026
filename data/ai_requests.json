@@ -54,7 +54,9 @@
   "member": "matteo",
   "nick": "Matte",
   "text": "Aggiungi al to-do, categoria Pasti: comprare fornellino di scorta",
-  "status": "pending",
-  "ts": 1783432381375
+  "status": "done",
+  "ts": 1783432381375,
+  "summary": "Aggiunta \"Comprare fornellino di scorta\" a Pasti.",
+  "resolvedTs": 1783432385561
  }
 ]
