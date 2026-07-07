@@ -1,6 +1,6 @@
 // API dati — legge/scrive i file JSON in data/ usando GitHub come database
 import crypto from 'crypto';
-import { processOneRequest, saveRequestOutcome } from './_lib/agentCore.js';
+import { processOneRequest, saveRequestOutcome, revertRequest } from './_lib/agentCore.js';
 
 const GH_TOKEN = process.env.GH_TOKEN;
 const SECRET = process.env.SESSION_SECRET;
@@ -185,6 +185,27 @@ export default async function handler(req, res) {
         // la riprenderà il passaggio schedulato, senza che l'invio dell'utente fallisca
       }
 
+      return res.status(200).json({ ok: true, aiRequests: updated });
+    }
+
+    if (action === 'revertAiRequest') {
+      const { requestId } = body;
+      if (!requestId) return res.status(400).json({ error: 'requestId mancante' });
+      const { content: list } = await ghGet('data/ai_requests.json');
+      const item = list.find(x => x.id === requestId);
+      if (!item) return res.status(404).json({ error: 'Richiesta non trovata.' });
+      try {
+        await revertRequest(item);
+      } catch (e) {
+        return res.status(400).json({ error: String(e.message || e).slice(0, 200) });
+      }
+      const updated = await mutate('data/ai_requests.json', c => {
+        const it = c.find(x => x.id === requestId);
+        if (!it) return false;
+        it.status = 'reverted';
+        it.revertedBy = nick;
+        it.revertedTs = now;
+      }, `${nick}: annullata modifica IA`);
       return res.status(200).json({ ok: true, aiRequests: updated });
     }
 
