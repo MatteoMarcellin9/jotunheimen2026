@@ -78,5 +78,13 @@
   "ts": 1783432534420,
   "summary": "Testo aggiornato.",
   "resolvedTs": 1783432542464
+ },
+ {
+  "id": "mrapq8y3fee9bd",
+  "member": "matteo",
+  "nick": "Matte",
+  "text": "Aggiungi un pulsante, per l'ultima richiesta di modifica, che permetta di tornare allo stato precedente, con un deploy automatico del codice precedente",
+  "status": "pending",
+  "ts": 1783432609995
  }
 ]
