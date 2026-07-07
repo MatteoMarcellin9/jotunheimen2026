@@ -44,7 +44,9 @@
   "member": "matteo",
   "nick": "Matte",
   "text": "Modifica il nome di Salva in King (emoji corona) ovunque",
-  "status": "pending",
-  "ts": 1783417688325
+  "status": "error",
+  "ts": 1783417688325,
+  "summary": "Expected property name or '}' in JSON at position 1 (line 1 column 2)",
+  "resolvedTs": 1783427284180
  }
 ]
