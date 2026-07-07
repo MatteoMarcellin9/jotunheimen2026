@@ -1,0 +1,23 @@
+name: Modifiche IA — agente automatico
+
+# Orari locali (Italia/Norvegia, estate = CEST = UTC+2): 00:00, 12:00, 16:00, 20:00
+# Convertiti in UTC per la sintassi cron di GitHub Actions: 22:00, 10:00, 14:00, 18:00
+on:
+  schedule:
+    - cron: '0 22 * * *'   # 00:00 CEST
+    - cron: '0 10 * * *'   # 12:00 CEST
+    - cron: '0 14 * * *'   # 16:00 CEST
+    - cron: '0 18 * * *'   # 20:00 CEST
+  workflow_dispatch: {}     # permette di lanciarlo a mano da GitHub → Actions → Run workflow
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Chiama l'endpoint dell'agente sul sito
+        run: |
+          curl -sS -X POST "https://jotunheimen2026.vercel.app/api/ai-agent" \
+            -H "Authorization: Bearer ${{ secrets.AGENT_CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            --max-time 120 \
+            --fail-with-body
