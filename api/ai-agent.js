@@ -121,17 +121,22 @@ async function callClaude(system, user) {
       model: 'claude-sonnet-4-6',
       max_tokens: 1500,
       system,
-      messages: [{ role: 'user', content: user }, { role: 'assistant', content: '{' }]
+      messages: [{ role: 'user', content: user }]
     })
   });
   if (!r.ok) { const t = await r.text(); throw new Error(`Anthropic API ${r.status}: ${t.slice(0, 200)}`); }
   const data = await r.json();
-  const text = '{' + (data.content?.[0]?.text || '');
-  return JSON.parse(text);
+  let text = (data.content?.[0]?.text || '').trim();
+  // tollera eventuali fence markdown (```json ... ```) o testo attorno al JSON
+  text = text.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
+  if (start === -1 || end === -1 || end < start) throw new Error('Risposta del modello non contiene un JSON valido.');
+  return JSON.parse(text.slice(start, end + 1));
 }
 
 const SYSTEM_PROMPT = `Interpreti richieste di modifica per il sito di gruppo di un trekking in Norvegia (Jotunheimen 2026).
-Rispondi SOLO con un oggetto JSON valido, nient'altro (niente markdown, niente prosa). Schema:
+Rispondi SOLO con un oggetto JSON valido, nient'altro: niente markdown, niente backtick, niente testo prima o dopo, niente spiegazioni. La tua intera risposta deve iniziare con { e finire con }. Schema:
 
 {"action": "recolor" | "edit_text" | "checklist_item" | "todo_item" | "unsupported", ...campi specifici}
 
