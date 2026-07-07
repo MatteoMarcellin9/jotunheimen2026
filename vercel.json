@@ -8,5 +8,9 @@
    "source": "/:path*",
    "destination": "/public/:path*"
   }
- ]
+ ],
+ "functions": {
+  "api/data.js": { "maxDuration": 30 },
+  "api/ai-agent.js": { "maxDuration": 30 }
+ }
 }
