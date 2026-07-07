@@ -12,7 +12,7 @@
 const GH_TOKEN = process.env.GH_TOKEN;
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
 const REPO = process.env.GH_REPO || 'MatteoMarcellin9/jotunheimen2026';
-const MODEL = 'claude-sonnet-4-6';
+const MODEL = 'claude-haiku-4-5-20251001';
 
 const GH_HEADERS = () => ({
   'Authorization': `token ${GH_TOKEN}`,
