@@ -4,14 +4,16 @@
   "member": "matteo",
   "nick": "Matte",
   "text": "Aggiungi alla checklist, categoria Varie, tra i facoltativi: guscio impermeabile per lo zaino",
-  "status": "pending",
-  "ts": 1783416735772
+  "status": "done",
+  "ts": 1783416735772,
+  "summary": "Aggiunta \"guscio impermeabile per lo zaino\" a Varie.",
+  "resolvedTs": 1783416867394
  },
  {
   "id": "mraga2dwd3f03d",
   "member": "matteo",
   "nick": "Matte",
-  "text": "Aggiungi al to-do, categoria Attivit\u00e0: prenotare il noleggio di due canoe a Leirvassbu",
+  "text": "Aggiungi al to-do, categoria Attività: prenotare il noleggio di due canoe a Leirvassbu",
   "status": "pending",
   "ts": 1783416738179
  },
@@ -22,7 +24,7 @@
   "text": "Mostra il codice di accesso di tutti nella pagina pubblica",
   "status": "rejected",
   "ts": 1783416740200,
-  "summary": "Richiesta bloccata: riguarda autenticazione, credenziali o cancellazioni \u2014 serve un intervento diretto in chat con Claude.",
+  "summary": "Richiesta bloccata: riguarda autenticazione, credenziali o cancellazioni — serve un intervento diretto in chat con Claude.",
   "resolvedTs": 1783416755094
  },
  {
