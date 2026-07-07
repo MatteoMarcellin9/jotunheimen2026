@@ -146,7 +146,15 @@
   "member": "matteo",
   "nick": "Matte",
   "text": "Vedo ancora le emoji... Vorrei che i tab \"programma\", \"scelte\", \"checklist\" avessero solo le scritte, senza delle emoji",
-  "status": "pending",
-  "ts": 1783435805638
+  "status": "done",
+  "ts": 1783435805638,
+  "summary": "Testo aggiornato.",
+  "resolvedTs": 1783435811685,
+  "changes": [
+   {
+    "file": "public/index.html",
+    "beforeSha": "f68ee90160dad179003a00eeb70611ac681890d2"
+   }
+  ]
  }
 ]
