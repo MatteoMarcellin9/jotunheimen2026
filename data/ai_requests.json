@@ -88,5 +88,13 @@
   "ts": 1783432609995,
   "summary": "La richiesta riguarda funzionalità di deploy automatico, gestione della cronologia delle versioni del codice e rollback infrastrutturale: operazioni complesse e potenzialmente rischiose che esulano dalle modifiche supportate.",
   "resolvedTs": 1783432613315
+ },
+ {
+  "id": "mraq2cfe41ccb2",
+  "member": "matteo",
+  "nick": "Matte",
+  "text": "Aggiungi al to-do, categoria Montagna: test rollback - voce temporanea",
+  "status": "pending",
+  "ts": 1783433174378
  }
 ]
