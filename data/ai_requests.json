@@ -84,7 +84,9 @@
   "member": "matteo",
   "nick": "Matte",
   "text": "Aggiungi un pulsante, per l'ultima richiesta di modifica, che permetta di tornare allo stato precedente, con un deploy automatico del codice precedente",
-  "status": "pending",
-  "ts": 1783432609995
+  "status": "manual",
+  "ts": 1783432609995,
+  "summary": "La richiesta riguarda funzionalità di deploy automatico, gestione della cronologia delle versioni del codice e rollback infrastrutturale: operazioni complesse e potenzialmente rischiose che esulano dalle modifiche supportate.",
+  "resolvedTs": 1783432613315
  }
 ]
