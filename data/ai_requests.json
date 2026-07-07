@@ -130,7 +130,15 @@
   "member": "matteo",
   "nick": "Matte",
   "text": "Test modifica: togli le emoji dalle tab di navigazione",
-  "status": "pending",
-  "ts": 1783435609761
+  "status": "done",
+  "ts": 1783435609761,
+  "summary": "Testo aggiornato.",
+  "resolvedTs": 1783435614753,
+  "changes": [
+   {
+    "file": "public/index.html",
+    "beforeSha": "1e9fb879e95f245df76cc165b81413fd3c22a6cf"
+   }
+  ]
  }
 ]
