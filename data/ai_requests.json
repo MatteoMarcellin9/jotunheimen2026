@@ -4,8 +4,10 @@
   "member": "matteo",
   "nick": "Matte",
   "text": "Aggiungi alla checklist, categoria Varie, tra i facoltativi: guscio impermeabile per lo zaino",
-  "status": "pending",
-  "ts": 1783416735772
+  "status": "error",
+  "ts": 1783416735772,
+  "summary": "Anthropic API 400: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"This model does not support assistant message prefill. The conversation must end with a user message.\"},\"request_i",
+  "resolvedTs": 1783416751825
  },
  {
   "id": "mraga2dwd3f03d",
