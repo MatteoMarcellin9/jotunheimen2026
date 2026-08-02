@@ -103,6 +103,7 @@
   "documentitesserasanitaria": true,
   "contantieurocarta": true,
   "telefono": true,
-  "tendadadividerenelgruppo": true
+  "tendadadividerenelgruppo": true,
+  "giaccaimpermeabileguscio": true
  }
 }
