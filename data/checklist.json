@@ -101,6 +101,8 @@
   "torciafrontalepile": true,
   "powerbankcavi": true,
   "documentitesserasanitaria": true,
-  "contantieurocarta": true
+  "contantieurocarta": true,
+  "telefono": true,
+  "tendadadividerenelgruppo": true
  }
 }
