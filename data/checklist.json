@@ -104,6 +104,7 @@
   "contantieurocarta": true,
   "telefono": true,
   "tendadadividerenelgruppo": true,
-  "giaccaimpermeabileguscio": true
+  "giaccaimpermeabileguscio": true,
+  "giaccaavento": true
  }
 }
