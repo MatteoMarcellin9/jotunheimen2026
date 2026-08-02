@@ -94,6 +94,7 @@
   "copertatermicaemergenza": true
  },
  "bianc": {
-  "zainodatrekking": true
+  "zainodatrekking": true,
+  "scarponcinirodati": true
  }
 }
