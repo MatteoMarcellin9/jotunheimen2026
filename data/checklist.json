@@ -129,6 +129,7 @@
   "cartaigienica": true,
   "filtroacquapastiglie": true,
   "antiinsetti": true,
-  "sacchiimpermeabiliinterni": true
+  "sacchiimpermeabiliinterni": true,
+  "sacchettispazzatura": true
  }
 }
