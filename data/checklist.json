@@ -130,6 +130,7 @@
   "filtroacquapastiglie": true,
   "antiinsetti": true,
   "sacchiimpermeabiliinterni": true,
-  "sacchettispazzatura": true
+  "sacchettispazzatura": true,
+  "copertatermicaemergenza": true
  }
 }
