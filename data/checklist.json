@@ -137,6 +137,8 @@
   "antiinsetti": true,
   "sacchiimpermeabiliinterni": true,
   "sacchettispazzatura": true,
-  "copertatermicaemergenza": true
+  "copertatermicaemergenza": true,
+  "zainodatrekking": true,
+  "scarponcinirodati": true
  }
 }
