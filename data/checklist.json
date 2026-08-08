@@ -146,6 +146,7 @@
   "powerbankcavi": true,
   "documentitesserasanitaria": true,
   "contantieurocarta": true,
-  "telefono": true
+  "telefono": true,
+  "tendadadividerenelgruppo": true
  }
 }
