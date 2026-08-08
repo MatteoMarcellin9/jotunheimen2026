@@ -147,6 +147,9 @@
   "documentitesserasanitaria": true,
   "contantieurocarta": true,
   "telefono": true,
-  "tendadadividerenelgruppo": true
+  "tendadadividerenelgruppo": true,
+  "fornelletto": true,
+  "bombolagrande": true,
+  "gavettapentolino": true
  }
 }
